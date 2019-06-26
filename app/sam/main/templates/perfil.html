@@ -1,0 +1,69 @@
+{% extends 'home.html' %}
+{% load static %}
+
+
+{% block content %}       
+        
+
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="header text-center">
+        <h2>Ficha consolidada</h2>
+    </div>
+</div>
+
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="card">
+        <div class="card-content">
+            <div class="cuadrotrans">
+                <h3>Informaci&oacute;n personal</h3>
+                <h5>Datos personales</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <img class="fotoroster" style="border-radius: 5%" class='img-responsive'
+                            src="../../include/mostrar/incFotoPersonaMostrar.php?ii_pers_rut=19041272"
+                            id='fotoAlumno' alt="" width="150px" height="171px" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h6>RUT</h6>
+                                <p>19041272-5</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Nombre</h6>
+                                <p>GARATE MUÑOZ MACARENA PAZ</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Fono m&oacute;vil</h6>
+                                <p>974519090</p>
+                                <!-- BEGIN: Separacion interlineado -->
+                                <p>
+                                    <br><br>
+                                </p>
+                                <!-- END: Separacion interlineado -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h6>Email alumno </h6>
+                                <p><a
+                                        href="mailto:macarena.garate.m@mail.pucv.cl">macarena.garate.m@mail.pucv.cl</a>
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Email personal </h6>
+                                <p><a href="mailto:mgaratemu@gmail.com">mgaratemu@gmail.com</a></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>ROL PUCV</h6>
+                                <p>592467-7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

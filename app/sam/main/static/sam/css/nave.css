@@ -1224,10 +1224,6 @@ td.tdNumero{
   border-top-width: 0;
 }
 
-/* Segundo Nivel*/
-#ap >.list-group.list-group-root > .list-group > .list-group-item {
-  /*padding-left: 30px;*/
-}
 #ap >.list-group.list-group-root > .list-group > .list-group-item:before {
     font-family: Material Icons;
     content: "subdirectory_arrow_right"
