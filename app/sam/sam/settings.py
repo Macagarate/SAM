@@ -79,10 +79,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'NAME': 'PROYECTO_SAM',
-        'HOST': 'localhost',
-        'USER': 'sam',
-        'PASSWORD': 'sam123',
+        'NAME': 'l8zzdmssju9468vf',
+        'HOST': 'tviw6wn55xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+        'USER': 'dhtcear20b26dof6',
+        'PASSWORD':'zwnmwmzxth6ynt9i',
+        'PORT': '3306'
     }
 }
 
