@@ -1,0 +1,6 @@
+
+app/sam/.vscode/settings.json
+app/sam/main/__pycache__/
+app/sam/main/migrations/
+app/sam/sam/__pycache__/
+
