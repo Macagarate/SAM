@@ -83,7 +83,11 @@ DATABASES = {
         'HOST': 'tviw6wn55xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
         'USER': 'dhtcear20b26dof6',
         'PASSWORD':'zwnmwmzxth6ynt9i',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        } 
+
     }
 }
 
