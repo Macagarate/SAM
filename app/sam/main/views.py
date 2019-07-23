@@ -40,7 +40,7 @@ def enviarEncuesta(request):
 def index(request):
     perfil = Usuario.objects.get(usuario=request.user.id)
 
-    return render(request, 'home.html', {'perfil': perfil})
+    return render(request, 'home.html')
 
 
 @login_required()
