@@ -4,3 +4,4 @@ app/sam/main/__pycache__/
 app/sam/main/migrations/
 app/sam/sam/__pycache__/
 
+app/sam/main/__pycache__/views.cpython-37.pyc
