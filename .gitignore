@@ -4,3 +4,13 @@ app/sam/main/__pycache__/
 app/sam/main/migrations/
 app/sam/sam/__pycache__/
 
+app/sam/main/__pycache__/__init__.cpython-37.pyc
+app/sam/main/__pycache__/admin.cpython-37.pyc
+app/sam/main/__pycache__/urls.cpython-37.pyc
+app/sam/main/__pycache__/models.cpython-37.pyc
+app/sam/main/__pycache__/views.cpython-37.pyc
+app/sam/main/migrations/__pycache__/__init__.cpython-37.pyc
+app/sam/sam/__pycache__/__init__.cpython-37.pyc
+app/sam/sam/__pycache__/settings.cpython-37.pyc
+app/sam/sam/__pycache__/urls.cpython-37.pyc
+app/sam/sam/__pycache__/wsgi.cpython-37.pyc
