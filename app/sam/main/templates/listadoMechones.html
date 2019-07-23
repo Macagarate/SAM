@@ -1,0 +1,111 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="header text-center">
+        <h2>Mechones</h2>
+        </br>
+    </div>
+</div>
+
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="card">
+        <div class="card-content">
+
+            <div class="row cuadro-filtro">
+                <div class="col-xs-12 col-md-8">
+                   <a href="{% url 'crear-usuario' %}" class="btn btn-primary btn-sm"> 
+                        <i class="zmdi zmdi-plus-circle" style="font-size:25px; color:#00000;"></i>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-md-4">
+                    <input class="form-control" id="filtroTabla" type="text" placeholder="Filtrar..">
+                </div>
+            </div>
+
+
+            <div class="cuadro-tabla">
+                <div class="row">
+
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-head">
+                            <th>Rut</th>
+                            <th>Nombre Alumno</th>
+                            <th>Fono M&oacute;vil</th>
+                            <th>Email Alumno</th>
+                            <th>Email Personal</th>
+                            <th>Opciones</th>
+                        </thead>
+                        <tbody id="tablaBusqueda">
+                            <tr>
+                                <td>12.345.678-9</td>
+                                <td>PELAGATO</td>
+                                <td class="tablaNumero">00000000</td>
+                                <td>pelagato@mail.pucv.cl</td>
+                                <td>pelagato@pelagato.com</td>
+                                <td>
+                                    <a href="#" style="color:#339fc3;" data-content="Editar" rel="popover" data-placement="bottom" data-trigger="hover">
+                                        <i class="zmdi zmdi-edit" style="font-size:20px; color:#339fc3;"></i>
+                                    </a>
+                                    <a href="#modalDelete" data-toggle="modal" style="color:#339fc3;" data-content="Borrar" rel="popover" data-placement="bottom" data-trigger="hover">
+                                        <i class="zmdi zmdi-delete" style="font-size:20px; color:#339fc3;"></i>
+                                    </a>
+                                </td>
+
+                                <div id="modalDelete" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">¡Atención!</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>¿Está seguro que quiere eliminar al alumno?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                <a href="#" role="button" class="btn btn-primary">¡Seguro!</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Anterior</span>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Siguiente</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

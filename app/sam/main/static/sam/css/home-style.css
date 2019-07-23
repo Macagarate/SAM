@@ -301,7 +301,7 @@ ul ul a {
 
 
 
-  .btn.btn-primary, .btn.btn-primary:active, .btn.btn-primary.active, .btn.btn-primary:active:focus,  .btn.btn-primary.active:hover, .open > .btn.btn-primary.dropdown-toggle, .open > .btn.btn-primary.dropdown-toggle:focus, .open > .btn.btn-primary.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-primary, .navbar .navbar-nav > li > a.btn.btn-primary:hover, .navbar .navbar-nav > li > a.btn.btn-primary:focus, .navbar .navbar-nav > li > a.btn.btn-primary:active, .navbar .navbar-nav > li > a.btn.btn-primary.active, .navbar .navbar-nav > li > a.btn.btn-primary:active:focus, .navbar .navbar-nav > li > a.btn.btn-primary:active:hover, .navbar .navbar-nav > li > a.btn.btn-primary.active:focus, .navbar .navbar-nav > li > a.btn.btn-primary.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:hover {
+.btn.btn-primary, .btn.btn-primary:active, .btn.btn-primary.active, .btn.btn-primary:active:focus,  .btn.btn-primary.active:hover, .open > .btn.btn-primary.dropdown-toggle, .open > .btn.btn-primary.dropdown-toggle:focus, .open > .btn.btn-primary.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-primary, .navbar .navbar-nav > li > a.btn.btn-primary:hover, .navbar .navbar-nav > li > a.btn.btn-primary:focus, .navbar .navbar-nav > li > a.btn.btn-primary:active, .navbar .navbar-nav > li > a.btn.btn-primary.active, .navbar .navbar-nav > li > a.btn.btn-primary:active:focus, .navbar .navbar-nav > li > a.btn.btn-primary:active:hover, .navbar .navbar-nav > li > a.btn.btn-primary.active:focus, .navbar .navbar-nav > li > a.btn.btn-primary.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:hover {
     background-color: #e87e04;
     color: #FFFFFF;
 	box-shadow: 0 2px 2px 0 rgba(232, 126, 4, 0.14), 0 3px 1px -2px rgba(164, 89, 2, 0.2), 0 1px 5px 0 rgba(209, 116, 10, 0.12);
@@ -430,6 +430,9 @@ ul ul a {
     color:#4e4a47 ! important;
 }
 
+button#botonRegistrarse {
+    align-content: right;
+}
 
 /*------------------------------------- Card */
 
@@ -506,11 +509,81 @@ ul ul a {
     border: transparent;  
 }
 
+.cuadro-pregunta {
+    min-height: 10px;
+    /*padding: 10px;*/
+    /*margin-bottom: 20px;*/
+    background-color: rgba(87, 143, 202, 0.9) !important;
+    border: transparent;
+}
+
+.cuadro-pregunta h3 {
+    margin-right: -5px;
+    margin-left: -5px;
+    color: #fff;
+    font-size: 1.50em;
+    margin: 0px 0 5px !important;
+}
+
+.cuadro-respuesta {
+    min-height: 10px;
+    /*padding: 5px;*/
+    margin-bottom: 5px;
+    background-color: transparent;
+}
+
+.cuadro-tabla {
+	min-height: 10px;
+    padding: 15px;
+    /*margin-bottom: 20px;*/
+    background-color: transparent;
+    border: transparent;  
+}
+
+.cuadro-filtro {
+	min-height: 10px;
+    padding: 15px;
+    /*margin-bottom: 20px;*/
+    background-color: transparent;
+    border: transparent;
+}
+
+.cuadro-form {
+	min-height: 10px;
+    padding: 15px;
+    /*margin-bottom: 20px;*/
+    background-color: transparent;
+    border: transparent;  
+}
+
+/*------------------------------------- Modal */
+
+.modal-dialog {
+    margin: 2px auto;
+}
+
+.modal-backdrop {
+    z-index: -1;
+    opacity:0.8;
+    background-color: #333333;
+  }
+
+
+div#modalDetalles .modal-dialog {
+    top: 30%;
+}
 
 /*------------------------------------- Img-responsive */
 .img-responsive {
 	display: initial;
 	max-width: 100%;
+}
+
+
+/*------------------------------------- Filtro */
+
+#filtroTabla{
+    width: unset;
 }
 
 

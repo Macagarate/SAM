@@ -1,0 +1,98 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="header text-center">
+        <h2>Grupos</h2>
+        </br>
+    </div>
+</div>
+
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="card">
+        <div class="card-content">
+            
+            <div class="cuadro-filtro d-flex justify-content-end">
+                </br>
+                <input class="form-control" id="filtroTabla" type="text" placeholder="Filtrar..">
+                </br>
+            </div>
+
+
+            <div class="cuadro-tabla">
+                </br>
+                <div class="row">
+
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-head">
+                            <th>N° Grupo</th>
+                            <th>Padrino(s) Encargado(s)</th>
+                            <th>Cantidad Mechones</th>
+                            <th>Detalles</th>
+                        </thead>
+                        <tbody id="tablaBusqueda">
+                            <tr>
+                                <td>1</td>
+                                <td>MACARENA GARATE MUÑOZ</td>
+                                <td>10</td>
+                                <td>
+                                    <a href="#modalDetalles" data-toggle="modal" style="color:#339fc3;" data-content="Ver" rel="popover" data-placement="bottom" data-trigger="hover">
+                                        <i class="zmdi zmdi-eye" style="font-size:20px; color:#339fc3;"></i>
+                                    </a>
+                                </td>
+
+                                <div id="modalDetalles" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Detalles Integrantes Grupo</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item list-group-item-primary">MACARENA GARATE MUÑOZ (PADRINO)</li>
+                                                    <li class="list-group-item list-group-item-secondary">PEGALATO</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Anterior</span>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Siguiente</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

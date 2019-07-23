@@ -1,15 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import date
-
+from datetime import date, datetime
 
 #CLASE ENCUESTA
 
 class Encuesta(models.Model):
-  anno = models.IntegerField()
+  anno = models.DateField(default=date.today)
+  activado = models.BooleanField(default=False)
   
-  def __str__(self):
-    return self.anno
+  def get_year(self):
+    return self.anno.year
 
 
 #CLASE PREGUNTA ASOCIADA A UNA ENCUESTA
@@ -21,6 +21,8 @@ class Pregunta(models.Model):
 
   def __str__(self):
     return self.texto
+  
+
 
 
 #CLASE RESPUESTA ASOCIADA A UNA PREGUNTA
@@ -43,7 +45,10 @@ class Usuario(models.Model):
   nombre = models.CharField(max_length = 255)
   apellidos = models.CharField(max_length = 255)
   rut = models.CharField(max_length = 255)
-  generacion = models.IntegerField()
+  generacion = models.IntegerField(default=2019)
+  email = models.EmailField(default=None, max_length=254, unique=True)
+  emailPersonal = models.EmailField(default=None, max_length=254)
+  usuario = models.ForeignKey(User, on_delete = models.CASCADE)
 
   def __str__(self):
     return u"%s %s" % (self.nombre, self.apellidos)
@@ -53,7 +58,7 @@ class Usuario(models.Model):
 # HERENCIA DE USUARIO; PADRINO
 
 class Padrino(Usuario):
-  calificacion = models.IntegerField()
+  calificacion = models.IntegerField(default=0)
 
   def __str__(self):
     return self.calificacion
@@ -63,6 +68,7 @@ class Padrino(Usuario):
 #CLASE GRUPO, FOREIGN KEY A PADRINO
 
 class Grupo(models.Model):
+  numero = models.IntegerField(default=0)
   padrino = models.ForeignKey(Padrino, on_delete = models.CASCADE)
 
 
@@ -70,7 +76,7 @@ class Grupo(models.Model):
 # HERENCIA DE USUARIO; MECHON. NO SE DEBERIA BORRAR SI NO PERTENECE A UN GRUPO
 
 class Mechon(Usuario):
-  calificacion = models.IntegerField()
+  calificacion = models.IntegerField(default=0)
   grupo = models.ForeignKey(
     Grupo, 
     on_delete=models.SET_NULL,
@@ -86,7 +92,7 @@ class Mechon(Usuario):
 #CLASE AFINACION ENTRE PADRINO Y MECHON
 
 class Afinacion(models.Model):
-  afinidad = models.FloatField()
+  afinidad = models.FloatField(default=0)
   padrino = models.ForeignKey(Padrino, on_delete = models.CASCADE)
   mechon = models.ForeignKey(Mechon, on_delete = models.CASCADE)
 
@@ -103,7 +109,7 @@ class Resultado(models.Model):
   #....
   alumno = models.ForeignKey(Usuario, on_delete = models.CASCADE)
   encuesta = models.ForeignKey(Encuesta, on_delete = models.CASCADE)
-  fecha_realizacion = models.DateField(default=date.today)
+  fecha_realizacion = models.DateTimeField(default=datetime.now)
 
   def __str__(self):
     return self.fecha_realizacion
