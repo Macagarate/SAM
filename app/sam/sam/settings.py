@@ -34,6 +34,10 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'main',
     'matchmaking.apps.MatchmakingConfig',
+    'encuesta.apps.EncuestaConfig',
+    'usuarios.apps.UsuariosConfig',
+    'analisis.apps.AnalisisConfig',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
