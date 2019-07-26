@@ -1,23 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date, datetime
 from encuesta.models import Encuesta
 from encuesta.models import Pregunta
+from usuarios.models import Usuario
 from usuarios.models import Padrino
 from usuarios.models import Mechon
 
+
+
 # Create your models here.
 
-
-
-class Respuesta(models.Model):
-  texto = models.TextField()
-  #Acá van las variables del test
-  #....
-  #....
-  pregunta = models.ForeignKey(Pregunta, on_delete = models.CASCADE)
-
-  def __str__(self):
-    return self.texto
 
 
 #CLASE GRUPO, FOREIGN KEY A PADRINO
@@ -37,7 +30,6 @@ class Afinacion(models.Model):
 
   def __str__(self):
     return self.afinidad
-
 
 
 #CLASE RESULTADO QUE CONTIENE FOREIGN KEYS AL ALUMNO Y A LA ENCUESTA CORRESPONDIENTE

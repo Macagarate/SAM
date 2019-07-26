@@ -20,4 +20,11 @@ class Pregunta(models.Model):
 
   def __str__(self):
     return self.texto
+
+class Alternativa(models.Model):
+  texto = models.TextField()
+  pregunta = models.ForeignKey(Pregunta, related_name='alternativa_pregunta',on_delete = models.CASCADE)
+
+  def __str__(self):
+    return self.texto
   

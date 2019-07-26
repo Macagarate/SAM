@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-from usuarios.models import Usuario, Padrino, Mechon
-from .models import Grupo,Afinacion, Resultado
+from usuarios.models import Usuario
+from usuarios.models import Padrino
+from usuarios.models import Mechon
+from analisis.models import Grupo
 from encuesta.models import Encuesta
 
 ##############---------FUNCIONES POR IMPLEMENTAR----------####################
