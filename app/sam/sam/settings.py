@@ -37,6 +37,11 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 INSTALLED_APPS = [
     'main',
+    'matchmaking.apps.MatchmakingConfig',
+    'encuesta.apps.EncuestaConfig',
+    'usuarios.apps.UsuariosConfig',
+    'analisis.apps.AnalisisConfig',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
