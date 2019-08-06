@@ -16,6 +16,11 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -26,8 +31,7 @@ SECRET_KEY = '+e@h*0&l*32-tzp%v4i6h-eq7w@(==wihn^x$p!@_0$@buo%g7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 # Application definition
 
@@ -56,7 +60,7 @@ ROOT_URLCONF = 'sam.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,8 +80,10 @@ WSGI_APPLICATION = 'sam.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< Updated upstream
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'NAME': 'PROYECTO_SAM',
         'HOST': 'localhost',
@@ -93,7 +99,23 @@ DATABASES = {
         #    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         #} 
 
+=======
+        'NAME': 'bd_nueva',
+        'HOST': 'localhost',
+        'USER': 'sam',
+        'PASSWORD': 'sam123',
+>>>>>>> Stashed changes
     }
+
+    #'default': {
+    #    'ENGINE': 'django.db.backends.mysql',
+    #    # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #    'NAME': 'l8zzdmssju9468vf',
+    #    'HOST': 'tviw6wn55xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+    #    'USER': 'dhtcear20b26dof6',
+    #    'PASSWORD':'zwnmwmzxth6ynt9i',
+    #    'PORT': '3306'
+    #}
 }
 
 
