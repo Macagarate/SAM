@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Usuario, Padrino, Mechon
+from .models import Usuario
+from .models import Apadrinamiento
 
 # Register your models here.
 
 admin.site.register(Usuario)
-admin.site.register(Padrino)
-admin.site.register(Mechon)
+admin.site.register(Apadrinamiento)
 

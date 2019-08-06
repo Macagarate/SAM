@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from .models import Person, Preference
+from .models import Preferencia
 from matching.games.stable_marriage import StableMarriage
 
 # Create your views here.
 def index(request):
-    a = get_ahijados()
+    render()
+""" a = get_ahijados()
     b = get_padrinos()
     solution =stableMarriage(b,a)
     return render(request, 'matchmaking.html',{'ahijados' : a,'padrinos' : b, 'solucion': solution.items()})
@@ -56,3 +57,4 @@ def stableMarriage(padrinos,ahijados):
     game = StableMarriage.create_from_dictionaries(godparents, students)
 
     return game.solve()
+ """

@@ -5,9 +5,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from usuarios.models import Usuario
-from usuarios.models import Padrino
-from usuarios.models import Mechon
-from analisis.models import Grupo
 from encuesta.models import Encuesta
 import datetime
 
