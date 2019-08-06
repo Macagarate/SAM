@@ -8,8 +8,17 @@ urlpatterns = [
    path('login/', auth_views.LoginView.as_view(), name="login"),
    path('logout/', auth_views.LogoutView.as_view(), name="logout"),
    path('home/', views.index, name="home"),
+   
+   # Parte de encuentas
    path('encuesta/', views.encuesta, name="encuesta"),
    path('encuestas/', views.encuestas, name="encuestas"),
+   path('encuestas/crear_encuesta', views.crearEncuesta, name="crearEncuesta"),
+   path('encuestas/ver_encuesta/<int:encuesta_id>', views.verEncuesta, name="verEncuesta"),
+   path('encuestas/editar_encuesta', views.editarEncuesta, name="editarEncuesta"),
+   path('encuestas/update_encuesta', views.updateEncuesta, name="updateEncuesta"),
+   path('encuestas/eliminar_encuesta', views.eliminarEncuesta, name="eliminarEncuesta"),
+   
+   #Fin parte encuesta
    path('perfil/', views.perfil, name="perfil"),
    path('resultado/', views.resultadoEncuesta, name="resultadoEncuesta"),
    path('resultados/', views.resultadosEncuestas, name="resultadosEncuestas"),

@@ -16,21 +16,21 @@
         <div class="card-content">
             <div class="cuadro-tabla">
                 </br>
+                <button type="button" class="btn btn-primary" href="#modalCreate" data-toggle="modal">Crear nueva encuesta</button>
                 <div class="row">
                     <table class="table table-hover table-bordered">
                         <thead class="table-head">
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Nombre</th>
                                 <th scope="col">Año</th>
-                                <th scope="col"></th>
+                                <th scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for encuesta in encuestas %}
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Ejemplo Encuesta 1</td>
-                                <td>2019</td>
+                                <th scope="row">{{encuesta.id}}</th>
+                                <td>{{encuesta.get_year}}</td>
                                 <td><a href="#" style="color:#339fc3;" data-content="Ver" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-eye" style="font-size:20px; color:#339fc3;"></i>
                                     </a>
@@ -62,28 +62,42 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Ejemplo Encuesta 2</td>
-                                <td>2018</td>
-                                <td><a href="#" style="color:#339fc3;" data-content="Ver" rel="popover" data-placement="bottom" data-trigger="hover">
-                                        <i class="zmdi zmdi-eye" style="font-size:20px; color:#339fc3;"></i>
-                                    </a>
-                                    <a href="#" style="color:#339fc3;" data-content="Editar" rel="popover" data-placement="bottom" data-trigger="hover">
-                                        <i class="zmdi zmdi-edit" style="font-size:20px; color:#339fc3;"></i>
-                                    </a>
-                                    <a href="#modalDelete" data-toggle="modal" style="color:#339fc3;" data-content="Borrar" rel="popover" data-placement="bottom" data-trigger="hover">
-                                        <i class="zmdi zmdi-delete" style="font-size:20px; color:#339fc3;"></i>
-                                    </a>
-                                </td>
+                            {%endfor%}
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div id="modalCreate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Crear nueva encuesta</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'crearEncuesta' %}" method="POST">{% csrf_token %} 
+                        <div class="form-group">
+                            <label for="exampleInputYear">Año</label>
+                                <input type="number" class="form-control" id="exampleInputYear" name="annio" min="1900" max="2099" value="2019" placeholder="Ingrese Año">
+                            </div>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Crear</a>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+                
+        </div>
+    </div>
 
 
 {% endblock content %}
