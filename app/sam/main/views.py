@@ -3,14 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-<<<<<<< Updated upstream
-from .models import Usuario, Padrino, Mechon, Grupo, Afinacion, Encuesta, Resultado
-=======
 from usuarios.models import Alumno
 from analisis.models import Grupo
 from encuesta.models import Encuesta
 import datetime
->>>>>>> Stashed changes
 
 ##############---------FUNCIONES HANDLERS----------####################
 
@@ -145,16 +141,6 @@ def crear_alumno(request):
         else:
              alumno.es_Mechon =  True
             
-<<<<<<< Updated upstream
-            crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
-            usuario_alumno = User.objects.filter(email=email_alumno)
-            mechon.usuario = usuario_alumno[0]
-
-            mechon.save()
-            return HttpResponse('200 OK')
-    
-    return HttpResponse('404 OK')
-=======
         crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
         usuario_alumno = User.objects.filter(email=email_alumno)
         alumno.usuario = usuario_alumno[0]
@@ -164,4 +150,3 @@ def crear_alumno(request):
 
     confirmacion = False
     return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
->>>>>>> Stashed changes
