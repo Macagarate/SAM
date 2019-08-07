@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
+from usuario.views import contact_upload
 
 urlpatterns = [
    path('login/', auth_views.LoginView.as_view(), name="login"),
@@ -30,5 +31,6 @@ urlpatterns = [
    path('enviar_encuesta/', views.enviarEncuesta, name="enviar_encuesta"),
    path('crear-usuario/', views.nuevoAlumno, name="crear-usuario"),
    path('crear-alumno/', views.crear_alumno, name="crear-alumno"),
+   path('upload-csv', contact_upload, name="contact_upload")
 
 ]

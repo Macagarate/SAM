@@ -1,3 +1,6 @@
+import csv, io  
+from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -180,3 +183,32 @@ def crear_alumno(request):
             return redirect('200 OK')
     
     return HttpResponse('404 OK')
+
+    @permission_required('admin.can_add_log_entry')
+    def contact_upload(request):
+        template = "contact_upload.html"
+
+        prompt = {
+            'order': 'Orden del csv deberia ser  rut, nombre, apellidos1, apellido2, generacion, email, emailPersonal'
+        }
+
+        if request.method == 'GET':
+            return render(request, template, prompt)
+
+        csv_file= request.FILES('file')
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'No es un archivo csv ')
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            next(io_string)
+            for column in csv.reader(io_string, delimiter=',', quotechar=" | "):
+                _, created = Usuario.objects.update_or_create(
+                    rut = column[0],
+                    nombre= column[1],
+                    apellidos= column[2]+' '+column[3],
+                    email= column[4],
+                    emailPersonal= column[5]
+                    ) 
+
+            context = {}
+            return render(request, template, context)
