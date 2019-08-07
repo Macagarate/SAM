@@ -2,8 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
-from .models import Usuario, Padrino, Mechon, Grupo, Afinacion, Encuesta, Resultado
+from usuarios.models import Usuario
+from usuarios.models import Padrino
+from usuarios.models import Mechon
+from analisis.models import Grupo
+from encuesta.models import Encuesta
+import datetime
 
 ##############---------FUNCIONES POR IMPLEMENTAR----------####################
 
@@ -38,9 +44,7 @@ def enviarEncuesta(request):
 
 @login_required()
 def index(request):
-    perfil = Usuario.objects.get(usuario=request.user.id)
-
-    return render(request, 'home.html', {'perfil': perfil})
+    return render(request, 'home.html')
 
 
 @login_required()
@@ -96,8 +100,34 @@ def resultadosEncuestas(request):
 
 @staff_member_required()
 def encuestas(request):
-    return render(request, 'encuestas.html')
+    encuestas = Encuesta.objects.all()
+    return render(request, 'encuestas.html',{'encuestas': encuestas})
 
+@staff_member_required()
+def crearEncuesta(request):
+    encuesta = Encuesta()
+    if request.method == 'POST':
+        anno = request.POST.get('annio')
+        encuesta.anno = datetime.date(int(anno),1,1)
+        encuesta.save()
+        return redirect('encuestas')
+
+@staff_member_required()
+def verEncuesta(request, encuesta_id):
+    encuesta = get_object_or_404(Encuesta, pk=encuesta_id)
+    return render(request,'encuesta_ver.html',{'encuesta': encuesta})
+
+@staff_member_required()
+def editarEncuesta(request):  
+    return redirect()
+
+@staff_member_required()
+def updateEncuesta(request):
+    return redirect()
+
+@staff_member_required()
+def eliminarEncuesta(request):
+    return redirect()
 
 @staff_member_required()
 def nuevoAlumno(request):
@@ -147,6 +177,6 @@ def crear_alumno(request):
             mechon.usuario = usuario_alumno[0]
 
             mechon.save()
-            return HttpResponse('200 OK')
+            return redirect('200 OK')
     
     return HttpResponse('404 OK')
