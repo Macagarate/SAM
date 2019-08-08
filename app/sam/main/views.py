@@ -185,7 +185,7 @@ def crear_alumno(request):
     return HttpResponse('404 OK')
 
 
-    
+
 @permission_required('admin.can_add_log_entry')
 def import_users(request):
     template = "contact_upload.html"
@@ -210,21 +210,23 @@ def import_users(request):
             lines = file_data.split("\n")
             for line in lines:						
                 fields = line.split(",")
-                alumno = Alumno()
-                alumno.rut = fields[0]
-                alumno.nombre = fields[1]
-                alumno.apellidos = fields[2] + " " + fields[3]
-                alumno.emailPersonal = fields[4]
-                alumno.email = fields[5]
-                alumno.carrera = fields[6]
-                alumno.generacion = fields[7]
-                if(date.today().year!=int(fields[7])):
-                    alumno.es_Mechon = False
-                crearUser('', alumno.nombre, alumno.apellidos, alumno.emailPersonal)
-                usuario_alumno = User.objects.filter(email=alumno.emailPersonal)
-                alumno.usuario = usuario_alumno[0]
-                alumno.save()
-                del alumno
+                alumnoExiste = Alumno.objects.filter(rut=fields[0])
+                if alumnoExiste == None:
+                    alumno = Alumno()
+                    alumno.rut = fields[0]
+                    alumno.nombre = fields[1]
+                    alumno.apellidos = fields[2] + " " + fields[3] # AGREGAR CASO APELLIDOS = APELLIDO PATERNO + APELLIDO MATERNO
+                    alumno.emailPersonal = fields[4]
+                    alumno.email = fields[5]
+                    alumno.carrera = fields[6]
+                    alumno.generacion = fields[7]
+                    if(date.today().year!=int(fields[7])):
+                        alumno.es_Mechon = False
+                    crearUser('', alumno.nombre, alumno.apellidos, alumno.emailPersonal)
+                    usuario_alumno = User.objects.filter(email=alumno.emailPersonal)
+                    alumno.usuario = usuario_alumno[0]
+                    alumno.save()
+                    del alumno
                
         except Exception as e:
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
