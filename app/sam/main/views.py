@@ -13,6 +13,9 @@ from usuarios.models import Mechon
 from analisis.models import Grupo
 from encuesta.models import Encuesta
 import datetime
+import logging
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 ##############---------FUNCIONES POR IMPLEMENTAR----------####################
 
@@ -184,31 +187,35 @@ def crear_alumno(request):
     
     return HttpResponse('404 OK')
 
-    @permission_required('admin.can_add_log_entry')
-    def contact_upload(request):
-        template = "contact_upload.html"
+@permission_required('admin.can_add_log_entry')
+def contact_upload(request):
+    template = "contact_upload.html"
 
-        prompt = {
-            'order': 'Orden del csv deberia ser  rut, nombre, apellidos1, apellido2, generacion, email, emailPersonal'
-        }
+    prompt = {
+        'order': 'Orden del csv deberia ser  rut, nombre, apellidos1, apellido2, generacion, email, emailPersonal'
+    }
 
-        if request.method == 'GET':
-            return render(request, template, prompt)
+    if request.method == 'GET':
+        return render(request, template, prompt)
 
-        csv_file= request.FILES('file')
-        if not csv_file.name.endswith('.csv'):
-            messages.error(request, 'No es un archivo csv ')
-            data_set = csv_file.read().decode('UTF-8')
-            io_string = io.StringIO(data_set)
-            next(io_string)
-            for column in csv.reader(io_string, delimiter=',', quotechar=" | "):
-                _, created = Usuario.objects.update_or_create(
-                    rut = column[0],
-                    nombre= column[1],
-                    apellidos= column[2]+' '+column[3],
-                    email= column[4],
-                    emailPersonal= column[5]
-                    ) 
+    if request.method == 'POST':
+        try:
+            csv_file = request.FILES["file"]
+            if not csv_file.name.endswith('csv'):
+                messages.error(request,'No es un archivo csv')
+                return HttpResponseRedirect(reverse("contact_upload"))
+            if csv_file.multiple_chunks():
+                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+                return HttpResponseRedirect(reverse("contact_upload"))
+            file_data = csv_file.read().decode("utf-8")	
+            lines = file_data.split("\n")
+            for line in lines:						
+                fields = line.split(";")
+                print(fields)
 
-            context = {}
-            return render(request, template, context)
+        except Exception as e:
+            logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+            messages.error(request,"Unable to upload file. "+repr(e))
+            redirect('upload-csv/')
+    
+        return HttpResponseRedirect(reverse("contact_upload"))

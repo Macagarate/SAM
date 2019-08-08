@@ -1,11 +1,10 @@
 {% if messages %}
-    {% for emailPersonal in messages %}
     <div>
-        <strong>{{message|safe}}</strong>
+        <strong>{{rut|safe}}</strong>
     </div>
 {% else %}
 {{order}}
-<form method="post" enclype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label>Upload a file</label>
     <input type='file' name="file">
