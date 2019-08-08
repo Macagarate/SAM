@@ -92,15 +92,15 @@ def grupo(request):
 @staff_member_required()
 def listadoMechones(request):
     mechones = Alumno.objects.filter(es_Mechon=True)
-	#return render(request, 'listadoMechones.html', {'mechones': mechones})
-    return render(request, 'listadoMechones.html')
+    return render(request, 'listadoMechones.html', {'mechones': mechones})
+    #return render(request, 'listadoMechones.html')
 
 
 @staff_member_required()
 def listadoPadrinos(request):
     padrinos = Alumno.objects.filter(es_Mechon=False)
-	#return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
-    return render(request, 'listadoPadrinos.html')
+    return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
+    #return render(request, 'listadoPadrinos.html')
 
 
 @staff_member_required()
@@ -208,7 +208,6 @@ def import_users(request):
                 return HttpResponseRedirect(reverse("import_users"))
             file_data = csv_file.read().decode("utf-8")	
             lines = file_data.split("\n")
-            print(lines)
             for line in lines:						
                 fields = line.split(",")
                 alumno = Alumno()

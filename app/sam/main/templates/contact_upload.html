@@ -2,16 +2,24 @@
 {% load staticfiles %}
 
 {% block content %}
+
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="header text-center">
+        <h2>Importar Datos</h2>
+        </br>
+    </div>
+</div>
+
 <div class="col-sm-12 col-sm-offset-1">
     <div class="card">
         <div class="card-content">
                 <div class="cuadro-tabla">
             <form method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="form-group">
-                    <label for="exampleInputFile">Archivo CSV: </label>
+                    <label for="exampleInputFile">Archivo CSV:</label>
                     <input type='file' name="file" id="exampleInputFile" aria-describedby="exampleInputFile"
-                        placeholder="Seleccione un archivo .csv" required>
-                    <small id="emailHelp" class="form-text text-muted">Seleccione el archivo con los datos de los
+                        placeholder="Seleccione un archivo" required>
+                    <small id="emailHelp" class="form-text text-muted">Seleccione el archivo .csv con los datos de los
                         alumnos
                         aqui</small>
                 </div>
