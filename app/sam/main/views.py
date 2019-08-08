@@ -11,6 +11,9 @@ from usuarios.models import Alumno
 from analisis.models import Grupo
 from encuesta.models import Encuesta
 import datetime
+import logging
+from django.urls import reverse
+
 
 ##############---------FUNCIONES HANDLERS----------####################
 
@@ -171,16 +174,19 @@ def crear_alumno(request):
         else:
              alumno.es_Mechon =  True
             
-            crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
-            usuario_alumno = User.objects.filter(email=email_alumno)
-            mechon.usuario = usuario_alumno[0]
+        crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
+        usuario_alumno = User.objects.filter(email=email_alumno)
+        alumno.usuario = usuario_alumno[0]
+        alumno.save()
+        confirmacion = True
 
-            mechon.save()
-            return redirect('200 OK')
-    
+        return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
+
     return HttpResponse('404 OK')
 
-@permission_required('admin.can_add_log_entry')
+
+    
+"""@permission_required('admin.can_add_log_entry')
 def contact_upload(request):
     template = "contact_upload.html"
 
@@ -213,11 +219,8 @@ def contact_upload(request):
     
         return HttpResponseRedirect(reverse("contact_upload"))
         crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
-        usuario_alumno = User.objects.filter(email=email_alumno)
-        alumno.usuario = usuario_alumno[0]
-        alumno.save()
-        confirmacion = True
-        return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
+        
 
     confirmacion = False
     return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
+"""

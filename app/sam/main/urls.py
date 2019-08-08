@@ -33,5 +33,5 @@ urlpatterns = [
    path('enviar_encuesta/', views.enviarEncuesta, name="enviar_encuesta"),
    path('crear-usuario/', views.nuevoAlumno, name="crear-usuario"),
    path('crear-alumno/', views.crear_alumno, name="crear-alumno"),
-   path('upload-csv/', views.contact_upload, name="contact_upload")
+   #path('upload-csv/', views.contact_upload, name="contact_upload")
 ]
