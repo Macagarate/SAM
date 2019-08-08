@@ -5,8 +5,6 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
-
 urlpatterns = [
    path('login/', auth_views.LoginView.as_view(), name="login"),
    path('logout/', auth_views.LogoutView.as_view(), name="logout"),
@@ -33,5 +31,8 @@ urlpatterns = [
    path('enviar_encuesta/', views.enviarEncuesta, name="enviar_encuesta"),
    path('crear-usuario/', views.nuevoAlumno, name="crear-usuario"),
    path('crear-alumno/', views.crear_alumno, name="crear-alumno"),
-   #path('upload-csv/', views.contact_upload, name="contact_upload")
+   path('import_users/', views.import_users, name="import_users"),
+
+
+
 ]

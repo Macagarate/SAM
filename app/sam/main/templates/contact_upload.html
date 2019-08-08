@@ -1,19 +1,35 @@
 {% extends 'home.html' %}
-{% load static %}
+{% load staticfiles %}
 
-{% if messages %}
-    <div>
-        <strong>{{rut|safe}}</strong>
+{% block content %}
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="card">
+        <div class="card-content">
+                <div class="cuadro-tabla">
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputFile">Archivo CSV: </label>
+                    <input type='file' name="file" id="exampleInputFile" aria-describedby="exampleInputFile"
+                        placeholder="Seleccione un archivo .csv" required>
+                    <small id="emailHelp" class="form-text text-muted">Seleccione el archivo con los datos de los
+                        alumnos
+                        aqui</small>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button class="btn btn-primary" type="submit">Cargar</button>
+                    </div>
+                </div>
+            </form>
+                </div>
+        </div>
     </div>
-{% else %}
-{{order}}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label>Upload a file</label>
-    <input type='file' name="file">
-    <p>Solo acepta archivos .csv <p>
-    <button type="submit"> Upload </button>>
-</form>
-{% endif %}
+</div>
+{%if message %}
+<div class="alert alert-danger" role="alert">
+        {{message}}
+      </div>
+{%endif%}
 
-{% endblock %} 
+{% endblock content %}
