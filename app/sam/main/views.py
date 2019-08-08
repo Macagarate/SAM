@@ -195,7 +195,7 @@ def import_users(request):
     if request.method == 'GET':
         return render(request, template, prompt)
 
-    if request.method == 'POST':
+    """ if request.method == 'POST':
         try:
             csv_file = request.FILES["file"]
             if not csv_file.name.endswith('csv'):
@@ -239,4 +239,4 @@ def import_users(request):
         except Exception as e:
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
             messages.error(request,"Unable to upload file. "+repr(e))
-        return HttpResponseRedirect(reverse("import_users"))
+        return HttpResponseRedirect(reverse("import_users")) """
