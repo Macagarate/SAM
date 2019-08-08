@@ -2,29 +2,36 @@ import csv, io
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
-from usuarios.models import Usuario
-from usuarios.models import Padrino
-from usuarios.models import Mechon
+from usuarios.models import Alumno
 from analisis.models import Grupo
 from encuesta.models import Encuesta
 import datetime
-import logging
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
-##############---------FUNCIONES POR IMPLEMENTAR----------####################
+##############---------FUNCIONES HANDLERS----------####################
+
+def handler404(request):
+    return render(request, '404.html', status=404)
+    
+def handler500(request):
+    return render(request, '500.html', status=500)
 
 #Creacion de nuevos usuarios; NO RETORNA UN TEMPLATE
 
 def crearUser(request, nombre=None, apellido=None, email=None):
     
-    first_letra = nombre[:1].lower()
-    apellidoSplit = apellido.split(" ")
+    # PARA EVITAR PROBLEMAS CON LETRAS ESPECIALES Y TILDES #
+    a,b = 'áéíóúüñÁÉÍÓÚÜÑ','aeiouunAEIOUUN'
+    trans = str.maketrans(a,b)
+    nombre_nuevo = nombre.translate(trans)
+    apellido_nuevo = apellido.translate(trans)
+
+    first_letra = nombre_nuevo[:1].lower()
+    apellidoSplit = apellido_nuevo.split(" ")
     first_apellido = apellidoSplit[0].lower()
     second_apellido = apellidoSplit[1][:1].lower()
     
@@ -61,7 +68,7 @@ def encuesta(request):
 @login_required()
 def perfil(request):
 
-    perfil = Usuario.objects.get(usuario=request.user.id)
+    perfil = Alumno.objects.get(usuario=request.user.id)
 
     return render(request, 'perfil.html', {'perfil': perfil})
 
@@ -80,14 +87,14 @@ def grupo(request):
 
 @staff_member_required()
 def listadoMechones(request):
-    mechones = Mechon.objects.all()
+    mechones = Alumno.objects.filter(es_Mechon=True)
 	#return render(request, 'listadoMechones.html', {'mechones': mechones})
     return render(request, 'listadoMechones.html')
 
 
 @staff_member_required()
 def listadoPadrinos(request):
-    padrinos = Padrino.objects.all()
+    padrinos = Alumno.objects.filter(es_Mechon=False)
 	#return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
     return render(request, 'listadoPadrinos.html')
 
@@ -137,46 +144,32 @@ def eliminarEncuesta(request):
 
 @staff_member_required()
 def nuevoAlumno(request):
-    return render(request, 'crear_usuario.html')
+    confirmacion = None
+    return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
 
 
 @staff_member_required()
 def crear_alumno(request):
     
     if request.method == 'POST':
-        nombre_alumno =request.POST.get('inputNombre')
+        alumno = Alumno()
+
+        nombre_alumno = request.POST.get('inputNombre')
         apellidos_alumno = request.POST.get('inputApellido')
-        rut_alumno = request.POST.get('inputRut')
-        generacion_alumno = request.POST.get('inputGeneracion')
         email_alumno = request.POST.get('inputEmail1')
-        emailPersonal_alumno = request.POST.get('inputEmail2')
+
+        alumno.nombre = nombre_alumno
+        alumno.apellidos = apellidos_alumno
+        alumno.rut = request.POST.get('inputRut')
+        alumno.generacion = request.POST.get('inputGeneracion')
+        alumno.email = email_alumno
+        alumno.emailPersonal = request.POST.get('inputEmail2')
         
         if request.POST.get('inputTipo') == 'PADRINO':
-
-            padrino = Padrino()
-            padrino.nombre = nombre_alumno
-            padrino.apellidos = apellidos_alumno
-            padrino.rut = rut_alumno
-            padrino.generacion = generacion_alumno
-            padrino.email = email_alumno
-            padrino.emailPersonal = emailPersonal_alumno
-
-            crearUser(nombre_alumno, apellidos_alumno, email_alumno)
-            usuario_alumno = User.objects.filter(email=email_alumno)
-
-            padrino.save()
-            return HttpResponse('200 OK')
-
-
-        if request.POST.get('inputTipo') == 'MECHON':
-
-            mechon = Mechon()
-            mechon.nombre = nombre_alumno
-            mechon.apellidos = apellidos_alumno
-            mechon.rut = rut_alumno
-            mechon.generacion = generacion_alumno
-            mechon.email = email_alumno
-            mechon.emailPersonal = emailPersonal_alumno
+            alumno.es_Mechon =  False
+        
+        else:
+             alumno.es_Mechon =  True
             
             crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
             usuario_alumno = User.objects.filter(email=email_alumno)
@@ -219,3 +212,12 @@ def contact_upload(request):
             redirect('upload-csv/')
     
         return HttpResponseRedirect(reverse("contact_upload"))
+        crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
+        usuario_alumno = User.objects.filter(email=email_alumno)
+        alumno.usuario = usuario_alumno[0]
+        alumno.save()
+        confirmacion = True
+        return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
+
+    confirmacion = False
+    return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})

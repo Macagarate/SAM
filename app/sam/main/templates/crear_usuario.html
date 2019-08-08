@@ -1,5 +1,4 @@
 {% extends 'home.html' %}
-{% load static %}
 
 
 {% block content %}
@@ -9,6 +8,16 @@
         <h2>Crear Usuario</h2>
     </div>
 </div>
+{% if confirmacion %}
+<div class="alert alert-success" role="alert">
+  ¡Alumno creado con éxito!
+</div>
+{% elif confirmacion == False %}
+<div class="alert alert-danger" role="alert">
+   ERROR - Alumno no pudo ser creado
+</div>
+{% endif %}
+
 
 <div class="col-sm-12 col-sm-offset-1">
     <div class="card">
@@ -21,8 +30,9 @@
                     <div class="form-group row">
                         <label for="inputRut" class="col-sm-2 col-form-label">Ingrese su Rut:</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="inputRut" name="inputRut" placeholder="p.e. 12.345.678-9">
+                            <input type="text" class="form-control" id="inputRut" name="inputRut"  placeholder="p.e. 12345678-9" value="" autofocus>
                         </div>
+                        <p class="text-info" id="msgerror"></p>
                     </div>
                     </br>
                     <div class="form-group row">
@@ -72,5 +82,6 @@
         </div>
     </div>
 </div>
+
 
 {% endblock content %}

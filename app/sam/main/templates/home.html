@@ -1,7 +1,6 @@
 {% load staticfiles %}
 {% load static %}
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +43,6 @@
             <ul class="list-unstyled components">
                 <li class="divider"></li>
                 {% if request.user.is_superuser %}
-                
                 {% else %}
 
                 <li>
@@ -56,7 +54,7 @@
                     </ul>
                 </li>
                 {% endif %}
-
+                
                 <li>
                     <a href="#encuestaSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Encuesta</a>
                     <ul class="collapse list-unstyled" id="encuestaSubmenu">
@@ -190,6 +188,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
         integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="{% static 'sam/js/validarut.js' %}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

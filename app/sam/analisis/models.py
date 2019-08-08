@@ -3,9 +3,7 @@ from django.contrib.auth.models import User
 from datetime import date, datetime
 from encuesta.models import Encuesta
 from encuesta.models import Pregunta
-from usuarios.models import Usuario
-from usuarios.models import Padrino
-from usuarios.models import Mechon
+from usuarios.models import Alumno
 
 
 
@@ -17,7 +15,7 @@ from usuarios.models import Mechon
 
 class Grupo(models.Model):
   numero = models.IntegerField(default=0)
-  padrino = models.ForeignKey(Padrino, on_delete = models.CASCADE)
+  padrino = models.ForeignKey(Alumno, on_delete = models.CASCADE)
 
 
 
@@ -25,8 +23,8 @@ class Grupo(models.Model):
 
 class Afinacion(models.Model):
   afinidad = models.FloatField(default=0)
-  padrino = models.ForeignKey(Padrino, on_delete = models.CASCADE)
-  mechon = models.ForeignKey(Mechon, on_delete = models.CASCADE)
+  padrino = models.ForeignKey(Alumno, on_delete = models.CASCADE, related_name = 'padrino_set')
+  mechon = models.ForeignKey(Alumno, on_delete = models.CASCADE, related_name = 'mechon_set')
 
   def __str__(self):
     return self.afinidad
@@ -38,7 +36,7 @@ class Resultado(models.Model):
   #Faltan saber las variables de la Encuesta
   #....
   #....
-  alumno = models.ForeignKey(Usuario, on_delete = models.CASCADE)
+  alumno = models.ForeignKey(Alumno, on_delete = models.CASCADE)
   encuesta = models.ForeignKey(Encuesta, on_delete = models.CASCADE)
   fecha_realizacion = models.DateTimeField(default=datetime.now)
 
