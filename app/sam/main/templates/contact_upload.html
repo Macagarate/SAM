@@ -19,9 +19,7 @@
                     <label for="exampleInputFile">Archivo CSV:</label>
                     <input type='file' name="file" id="exampleInputFile" aria-describedby="exampleInputFile"
                         placeholder="Seleccione un archivo" required>
-                    <small id="emailHelp" class="form-text text-muted">Seleccione el archivo .csv con los datos de los
-                        alumnos
-                        aqui</small>
+                    <small id="emailHelp" class="form-text text-muted">Seleccione el archivo .csv con los datos de los alumnos</small>
                 </div>
 
                 <div class="form-group row">
@@ -34,10 +32,10 @@
         </div>
     </div>
 </div>
-{%if message %}
+{% if message %}
 <div class="alert alert-danger" role="alert">
         {{message}}
       </div>
-{%endif%}
+{% endif %}
 
 {% endblock content %}

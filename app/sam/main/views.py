@@ -40,13 +40,16 @@ def crearUser(request, nombre=None, apellido=None, email=None):
     second_apellido = apellidoSplit[1][:1].lower()
     
     userName = first_letra + first_apellido + second_apellido
-    userPass = userName + '99'
-    userEmail = email
+    userExiste = User.objects.filter(username=userName)
+    if userExiste == None:
+        userPass = userName + '99'
+        userEmail = email
 
-    user = User.objects.create_user(username=userName,
-                                    email=userEmail,
-                                    password=userPass)
-    user.save()
+        user = User.objects.create_user(username=userName,
+                                        email=userEmail,
+                                        password=userPass)
+        user.save()
+        del user
 
     return HttpResponse('')
 
@@ -71,9 +74,7 @@ def encuesta(request):
 
 @login_required()
 def perfil(request):
-
     perfil = Alumno.objects.get(usuario=request.user.id)
-
     return render(request, 'perfil.html', {'perfil': perfil})
 
 
@@ -87,27 +88,26 @@ def grupo(request):
     return render(request, 'grupo.html')
 
 
-#PAGINAS CON SÓLO ACCESO DE ADMIN
+#----------------PAGINAS CON SÓLO ACCESO DE ADMIN!
+
 
 @staff_member_required()
 def listadoMechones(request):
     mechones = Alumno.objects.filter(es_Mechon=True)
     return render(request, 'listadoMechones.html', {'mechones': mechones})
-    #return render(request, 'listadoMechones.html')
 
 
 @staff_member_required()
 def listadoPadrinos(request):
     padrinos = Alumno.objects.filter(es_Mechon=False)
     return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
-    #return render(request, 'listadoPadrinos.html')
 
 
 @staff_member_required()
 def grupos(request):
     grupos = Grupo.objects.all()
-    #return render(request, 'grupos.html', {'grupos': grupos})
-    return render(request, 'grupos.html')
+    return render(request, 'grupos.html', {'grupos': grupos})
+    #return render(request, 'grupos.html')
 
 
 @staff_member_required()
