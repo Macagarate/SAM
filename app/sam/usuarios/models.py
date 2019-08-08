@@ -5,15 +5,21 @@ from datetime import date, datetime
 #CLASE USUARIO GENERAL
 
 class Alumno(models.Model):
-  nombre = models.CharField(max_length = 255)
-  apellidos = models.CharField(max_length = 255)
-  rut = models.CharField(max_length = 50, unique=True)
+  TYPE_CARRERA = [
+        ('INF', 'Ejecución'),
+        ('ICI', 'Civil'),
+    ]
+  nombre = models.CharField(max_length = 255, null=False)
+  apellidos = models.CharField(max_length = 255, null=False)
+  rut = models.CharField(max_length = 50, unique=True, null=False)
   generacion = models.IntegerField(default=2019)
-  email = models.EmailField(default=None, max_length=254, unique=True)
+  email = models.EmailField(max_length=254, unique=True, null=False, default='')
   emailPersonal = models.EmailField(default=None, max_length=254)
-  es_Mechon=models.BooleanField(default=None)
+  es_Mechon = models.BooleanField(default=True, null=False)
+  carrera = models.CharField(max_length=10, choices=TYPE_CARRERA, null=False, default='')
+
   usuario = models.OneToOneField(User, on_delete = models.CASCADE)
-  #FALTA CARRERA
+
 
 
   def __str__(self):
