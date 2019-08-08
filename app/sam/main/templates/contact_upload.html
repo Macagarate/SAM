@@ -1,3 +1,6 @@
+{% extends 'home.html' %}
+{% load static %}
+
 {% if messages %}
     <div>
         <strong>{{rut|safe}}</strong>
@@ -12,3 +15,5 @@
     <button type="submit"> Upload </button>>
 </form>
 {% endif %}
+
+{% endblock %} 
