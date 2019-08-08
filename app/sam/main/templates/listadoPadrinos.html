@@ -32,18 +32,17 @@
                         <thead class="table-head">
                             <th>Rut</th>
                             <th>Nombre Alumno</th>
-                            <th>Fono M&oacute;vil</th>
                             <th>Email Alumno</th>
                             <th>Email Personal</th>
                             <th>Opciones</th>
                         </thead>
                         <tbody id="tablaBusqueda">
+                            {% for padrino in padrinos %}
                             <tr>
-                                <td>19.041.272-5</td>
-                                <td>MACARENA GARATE MUÑOZ</td>
-                                <td class="tablaNumero">974519090</td>
-                                <td>macarena.garate.m@mail.pucv.cl</td>
-                                <td>mgaratemu@gmail.com</td>
+                                <td>{{padrino.rut}}</td>
+                                <td>{{padrino.nombre}} {{padrino.apellidos}}</td>
+                                <td>{{padrino.email}}</td>
+                                <td>{{padrino.emailPersonal}}</td>
                                 <td>
                                     <a href="#" style="color:#339fc3;" data-content="Editar" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-edit" style="font-size:20px; color:#339fc3;"></i>
@@ -75,6 +74,7 @@
                                 </div>
                                 
                             </tr>
+                            {%endfor%}
 
                         </tbody>
                     </table>

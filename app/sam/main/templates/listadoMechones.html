@@ -33,18 +33,17 @@
                         <thead class="table-head">
                             <th>Rut</th>
                             <th>Nombre Alumno</th>
-                            <th>Fono M&oacute;vil</th>
                             <th>Email Alumno</th>
                             <th>Email Personal</th>
                             <th>Opciones</th>
                         </thead>
                         <tbody id="tablaBusqueda">
+                            {% for mechon in mechones %}
                             <tr>
-                                <td>12.345.678-9</td>
-                                <td>PELAGATO</td>
-                                <td class="tablaNumero">00000000</td>
-                                <td>pelagato@mail.pucv.cl</td>
-                                <td>pelagato@pelagato.com</td>
+                                <td>{{mechon.rut}}</td>
+                                <td>{{mechon.nombre}} {{mechon.apellido}}</td>
+                                <td>{{mechon.email}}</td>
+                                <td>{{mechon.emailPersonal}}</td>
                                 <td>
                                     <a href="#" style="color:#339fc3;" data-content="Editar" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-edit" style="font-size:20px; color:#339fc3;"></i>
@@ -76,6 +75,7 @@
                                 </div>
                                 
                             </tr>
+                            {%endfor%}
 
                         </tbody>
                     </table>
