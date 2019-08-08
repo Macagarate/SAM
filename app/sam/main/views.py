@@ -157,7 +157,6 @@ def crear_alumno(request):
     
     if request.method == 'POST':
         alumno = Alumno()
-
         nombre_alumno = request.POST.get('inputNombre')
         apellidos_alumno = request.POST.get('inputApellido')
         email_alumno = request.POST.get('inputEmail1')
@@ -198,7 +197,7 @@ def import_users(request):
     if request.method == 'GET':
         return render(request, template, prompt)
 
-    """ if request.method == 'POST':
+    if request.method == 'POST':
         try:
             csv_file = request.FILES["file"]
             if not csv_file.name.endswith('csv'):
@@ -212,40 +211,25 @@ def import_users(request):
             print(lines)
             for line in lines:						
                 fields = line.split(",")
-                print(fields)
-                if(date.today().year==int(fields[7])):
-                    mechon = Mechon()
-                    mechon.rut = fields[0]
-                    mechon.nombre = fields[1]
-                    mechon.apellidos = fields[2] + " " + fields[3]
-                    mechon.emailPersonal = fields[4]
-                    mechon.email = fields[5]
-                    mechon.generacion = fields[7]
-                    crearUser('', mechon.nombre, mechon.apellidos, mechon.emailPersonal)
-                    usuario_alumno = User.objects.filter(email=mechon.emailPersonal)
-                    mechon.usuario = usuario_alumno[0]
-                    mechon.save()
-                    del mechon
-                else:
-                    padrino = Padrino()
-                    padrino.rut = fields[0]
-                    padrino.nombre = fields[1]
-                    padrino.apellidos = fields[2] + " " + fields[3]
-                    padrino.emailPersonal = fields[4]
-                    padrino.email = fields[5]
-                    padrino.generacion = fields[7]
-                    crearUser('', padrino.nombre, padrino.apellidos, padrino.emailPersonal)
-                    usuario_alumno = User.objects.filter(email=padrino.emailPersonal)
-                    padrino.usuario = usuario_alumno[0]
-                    padrino.save()
-                    del padrino
+                alumno = Alumno()
+                alumno.rut = fields[0]
+                alumno.nombre = fields[1]
+                alumno.apellidos = fields[2] + " " + fields[3]
+                alumno.emailPersonal = fields[4]
+                alumno.email = fields[5]
+                alumno.carrera = fields[6]
+                alumno.generacion = fields[7]
+                if(date.today().year!=int(fields[7])):
+                    alumno.es_Mechon = False
+                crearUser('', alumno.nombre, alumno.apellidos, alumno.emailPersonal)
+                usuario_alumno = User.objects.filter(email=alumno.emailPersonal)
+                alumno.usuario = usuario_alumno[0]
+                alumno.save()
+                del alumno
+               
         except Exception as e:
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
             messages.error(request,"Unable to upload file. "+repr(e))
-            redirect('upload-csv/')
-    
-        return HttpResponseRedirect(reverse("contact_upload"))
-        crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
-    confirmacion = False
-    return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
-"""
+            redirect('import_users/')
+        return HttpResponseRedirect(reverse("import_users"))
+
