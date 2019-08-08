@@ -89,14 +89,11 @@
                             <a href="{% url 'padrinos' %}">Padrinos</a>
                         </li>
                         <li>
-                            <a href="{% url 'mechones' %}">Mechones</a>
+                            <a href="{% url 'mechones' %}">Ahijados</a>
                         </li>
                         <li>
                             <a href="{% url 'import_users' %}">Importación</a>
                         </li>
-                        <li>
-                                <a href="{% url 'matchmaking:index' %}">Matchmaking</a>
-                            </li>
                         {% else %}
                         <li>
                             <a href="{% url 'grupo' %}">Tu Grupo</a>
@@ -105,6 +102,16 @@
 
                     </ul>
                 </li>
+                {% if request.user.is_superuser %}
+                <li>
+                    <a href="#matchmakingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Matchmaking</a>
+                    <ul class="collapse list-unstyled" id="matchmakingSubmenu">
+                        <li>
+                            <a href="{% url 'matchmaking:index' %}">Realizar Emparejamiento</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
         </nav>
 
