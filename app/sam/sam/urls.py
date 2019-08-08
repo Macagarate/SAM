@@ -19,5 +19,5 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sam/', include('main.urls')),
-    path('matchmaking/',include('matchmaking.urls'))
+    path('matchmaking/',include('matchmaking.urls', namespace="matchmaking"))
 ]

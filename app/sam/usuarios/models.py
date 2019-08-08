@@ -22,7 +22,7 @@ class Padrino(Usuario):
   calificacion = models.IntegerField(default=0)
 
   def __str__(self):
-    return self.calificacion
+    return u"%s %s" % (self.nombre,self.calificacion)
 
 
 # HERENCIA DE USUARIO; MECHON. NO SE DEBERIA BORRAR SI NO PERTENECE A UN GRUPO
@@ -30,4 +30,4 @@ class Padrino(Usuario):
 class Mechon(Usuario):
   calificacion = models.IntegerField(default=0)
   def __str__(self):
-    return self.calificacion 
+    return u"%s %s" % (self.nombre,self.calificacion)

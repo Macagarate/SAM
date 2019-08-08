@@ -12,7 +12,8 @@ from usuarios.models import Padrino
 from usuarios.models import Mechon
 from analisis.models import Grupo
 from encuesta.models import Encuesta
-import datetime
+import datetime 
+from datetime import date
 import logging
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -81,15 +82,13 @@ def grupo(request):
 @staff_member_required()
 def listadoMechones(request):
     mechones = Mechon.objects.all()
-	#return render(request, 'listadoMechones.html', {'mechones': mechones})
-    return render(request, 'listadoMechones.html')
+    return render(request, 'listadoMechones.html',{'mechones':mechones })
 
 
 @staff_member_required()
 def listadoPadrinos(request):
     padrinos = Padrino.objects.all()
-	#return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
-    return render(request, 'listadoPadrinos.html')
+    return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
 
 
 @staff_member_required()
@@ -177,18 +176,16 @@ def crear_alumno(request):
             mechon.generacion = generacion_alumno
             mechon.email = email_alumno
             mechon.emailPersonal = emailPersonal_alumno
-            
             crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
             usuario_alumno = User.objects.filter(email=email_alumno)
             mechon.usuario = usuario_alumno[0]
-
             mechon.save()
             return redirect('200 OK')
     
     return HttpResponse('404 OK')
 
 @permission_required('admin.can_add_log_entry')
-def contact_upload(request):
+def import_users(request):
     template = "contact_upload.html"
 
     prompt = {
@@ -203,19 +200,43 @@ def contact_upload(request):
             csv_file = request.FILES["file"]
             if not csv_file.name.endswith('csv'):
                 messages.error(request,'No es un archivo csv')
-                return HttpResponseRedirect(reverse("contact_upload"))
+                return HttpResponseRedirect(reverse("import_users"))
             if csv_file.multiple_chunks():
                 messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
-                return HttpResponseRedirect(reverse("contact_upload"))
+                return HttpResponseRedirect(reverse("import_users"))
             file_data = csv_file.read().decode("utf-8")	
             lines = file_data.split("\n")
+            print(lines)
             for line in lines:						
-                fields = line.split(";")
+                fields = line.split(",")
                 print(fields)
-
+                if(date.today().year==int(fields[7])):
+                    mechon = Mechon()
+                    mechon.rut = fields[0]
+                    mechon.nombre = fields[1]
+                    mechon.apellidos = fields[2] + " " + fields[3]
+                    mechon.emailPersonal = fields[4]
+                    mechon.email = fields[5]
+                    mechon.generacion = fields[7]
+                    crearUser('', mechon.nombre, mechon.apellidos, mechon.emailPersonal)
+                    usuario_alumno = User.objects.filter(email=mechon.emailPersonal)
+                    mechon.usuario = usuario_alumno[0]
+                    mechon.save()
+                    del mechon
+                else:
+                    padrino = Padrino()
+                    padrino.rut = fields[0]
+                    padrino.nombre = fields[1]
+                    padrino.apellidos = fields[2] + " " + fields[3]
+                    padrino.emailPersonal = fields[4]
+                    padrino.email = fields[5]
+                    padrino.generacion = fields[7]
+                    crearUser('', padrino.nombre, padrino.apellidos, padrino.emailPersonal)
+                    usuario_alumno = User.objects.filter(email=padrino.emailPersonal)
+                    padrino.usuario = usuario_alumno[0]
+                    padrino.save()
+                    del padrino
         except Exception as e:
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
             messages.error(request,"Unable to upload file. "+repr(e))
-            redirect('upload-csv/')
-    
-        return HttpResponseRedirect(reverse("contact_upload"))
+        return HttpResponseRedirect(reverse("import_users"))
