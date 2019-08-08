@@ -188,7 +188,7 @@ def crear_alumno(request):
 
     
 @permission_required('admin.can_add_log_entry')
-def contact_upload(request):
+def import_users(request):
     template = "contact_upload.html"
 
     prompt = {
