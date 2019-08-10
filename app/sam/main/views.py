@@ -336,12 +336,13 @@ def import_users(request):
                     alumno.usuario = usuario_alumno[0]
                     alumno.save()
                     del alumno
-               
+            messages.success(request, '¡Importación exitosa!')   
+        
         except Exception as e:
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
             messages.error(request,"ERROR - No se pudo subir imagen. "+repr(e))
             redirect('import_users/')
         
-        messages.success(request, '¡Importación exitosa!')
+       
         return HttpResponseRedirect(reverse("import_users"))
 
