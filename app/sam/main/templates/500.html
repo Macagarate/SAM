@@ -23,6 +23,21 @@ Estilo1 {
 <div align="center">
 <img src="http://www.normasgraficas.ucv.cl/imag/logo_colores.png" width="300" height="115">
 </div>
+
+
+{% if messages %}
+    {% for message in messages %}
+    {% if  message.tags == "error" %}
+    <div class="alert alert-danger" role="alert">
+    {% else %}
+    <div class="alert alert-success" role="alert">
+    {% endif %}
+        {{message}}
+    </div>
+    {% endfor %}
+{% endif %}
+
+
 <br>
   <table width="75%" border="0" align="center">
     <tr>

@@ -162,7 +162,8 @@ def grupos(request):
 
 @staff_member_required()
 def resultadosEncuestas(request):
-    return render(request, 'resultados-encuestas.html')
+    alumnos = Alumno.objects.all()
+    return render(request, 'resultados-encuestas.html', {'alumnos': alumnos})
 
 
 @staff_member_required()
@@ -287,7 +288,7 @@ def borrar_alumno(request, id_alumno=None):
         
         except ObjectDoesNotExist:
             messages.error(request,'ERROR - ¡No se pudo eliminar al alumno correctamente!')
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("handler500"))
 
 
 
