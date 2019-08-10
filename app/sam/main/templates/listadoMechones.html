@@ -10,6 +10,18 @@
     </div>
 </div>
 
+{% if messages %}
+    {% for message in messages %}
+    {% if  message.tags == "error" %}
+    <div class="alert alert-danger" role="alert">
+    {% else %}
+    <div class="alert alert-success" role="alert">
+    {% endif %}
+        {{message}}
+    </div>
+    {% endfor %}
+{% endif %}
+
 <div class="col-sm-12 col-sm-offset-1">
     <div class="card">
         <div class="card-content">
@@ -41,7 +53,7 @@
                             {% for mechon in mechones %}
                             <tr>
                                 <td>{{mechon.rut}}</td>
-                                <td>{{mechon.nombre}} {{mechon.apellido}}</td>
+                                <td>{{mechon.nombre}} {{mechon.apellidos}}</td>
                                 <td>{{mechon.email}}</td>
                                 <td>{{mechon.emailPersonal}}</td>
                                 <td>
@@ -68,7 +80,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                <a href="#" role="button" class="btn btn-primary">¡Seguro!</a>
+                                                <a href="{% url 'borrar_alumno' id_alumno=mechon.id %}" role="button" class="btn btn-primary">¡Seguro!</a>
                                             </div>
                                         </div>
                                     </div>

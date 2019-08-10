@@ -7,6 +7,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from usuarios.models import Alumno
@@ -16,6 +17,7 @@ import datetime
 from datetime import date
 import logging
 from django.urls import reverse
+from django.template import *
 
 
 ##############---------FUNCIONES HANDLERS----------####################
@@ -26,9 +28,9 @@ def handler404(request):
 def handler500(request):
     return render(request, '500.html', status=500)
 
-#Creacion de nuevos usuarios; NO RETORNA UN TEMPLATE
 
-def crearUser(request, nombre=None, apellido=None, email=None):
+
+def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nuevos usuarios
     
     # PARA EVITAR PROBLEMAS CON LETRAS ESPECIALES Y TILDES #
     a,b = 'áéíóúüñÁÉÍÓÚÜÑ','aeiouunAEIOUUN'
@@ -156,6 +158,7 @@ def grupos(request):
     return render(request, 'grupos.html', {'grupos': grupos})
     #return render(request, 'grupos.html')
 
+##############---------CRUD ENCUESTA----------###################
 
 @staff_member_required()
 def resultadosEncuestas(request):
@@ -193,6 +196,8 @@ def updateEncuesta(request):
 def eliminarEncuesta(request):
     return redirect()
 
+
+##############---------CRUD USUARIOS----------###################
 
 @staff_member_required()
 def crear_alumno(request):
@@ -259,6 +264,35 @@ def crear_alumno(request):
         return HttpResponseRedirect(reverse("crear_alumno"))
 
 
+@staff_member_required()
+def borrar_alumno(request, id_alumno=None):
+    
+    tipoAlumno = None
+
+    if request.method == 'GET':
+        try:
+            alumno = Alumno.objects.get(id=id_alumno)
+            tipoAlumno = alumno.es_Mechon
+            id_usuario = alumno.usuario_id
+            user = User.objects.get(id=id_usuario)
+            user.delete()
+            alumno.delete()
+
+            if tipoAlumno:
+                messages.success(request, '¡Alumno eliminado con éxito!')
+                return HttpResponseRedirect(reverse("mechones"))
+            else:
+                messages.success(request, '¡Alumno eliminado con éxito!')
+                return HttpResponseRedirect(reverse("padrinos"))
+        
+        except ObjectDoesNotExist:
+            messages.error(request,'ERROR - ¡No se pudo eliminar al alumno correctamente!')
+            return HttpResponseRedirect(reverse("home"))
+
+
+
+##############---------IMPORTACION----------###################
+       
 @permission_required('admin.can_add_log_entry')
 def import_users(request):
     template = "contact_upload.html"
@@ -305,5 +339,7 @@ def import_users(request):
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
             messages.error(request,"ERROR - No se pudo subir imagen. "+repr(e))
             redirect('import_users/')
+        
+        messages.success(request, '¡Importación exitosa!')
         return HttpResponseRedirect(reverse("import_users"))
 

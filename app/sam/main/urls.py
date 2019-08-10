@@ -35,5 +35,6 @@ urlpatterns = [
    #Usuarios
    path('crear_alumno/', views.crear_alumno, name="crear_alumno"),
    path('cambiar_pass/', views.cambiar_pass, name="cambiar_pass"),
+   path('borrar_alumno/<int:id_alumno>', views.borrar_alumno, name="borrar_alumno"),
 
 ]
