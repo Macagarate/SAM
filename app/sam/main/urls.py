@@ -33,9 +33,7 @@ urlpatterns = [
    path('import_users/', views.import_users, name="import_users"),
 
    #Usuarios
-   path('crear-usuario/', views.nuevoAlumno, name="crear-usuario"),
-   path('crear-alumno/', views.crear_alumno, name="crear-alumno"),
+   path('crear_alumno/', views.crear_alumno, name="crear_alumno"),
    path('cambiar_pass/', views.cambiar_pass, name="cambiar_pass"),
-   path('change_pass/', views.change_pass, name="change_pass"),
 
 ]

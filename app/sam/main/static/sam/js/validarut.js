@@ -1,6 +1,7 @@
 var Fn = {
     // Valida el rut con su cadena completa "XXXXXXXX-X" con puntos o sin puntos
     validaRut : function (rutCompleto) {
+        rutCompleto = rutCompleto.replace('-', '-');
         if (!/^0*(\d{1,3}(\.?\d{3})*)\-([\dkK])$/.test( rutCompleto )) {
             return false;
         }
@@ -9,7 +10,9 @@ var Fn = {
         var tmp = res.split('-');
         var digv = tmp[1]; 
         var rut = tmp[0];
-        if ( digv == 'K' ) digv = 'k' ;
+        if ( digv == 'K' ){
+             digv = 'k' ;
+        }
         
         return (Fn.dv(rut) == digv );
     },
@@ -25,9 +28,11 @@ var Fn = {
 $(document).ready(function(){
 	$("#inputRut").blur(function(){
     if (Fn.validaRut( $("#inputRut").val() )){
-        $("#msgerror").html("Rut válido");
+        $("#msgRut").html("Rut válido");
+        var boton = document.getElementById("botonRegistrarse");
+        boton.removeAttribute("disabled");
     } else {
-		$("#msgerror").html("Rut no es válido");
+        $("#msgRut").html("Rut no es válido");
     }
 });
 });

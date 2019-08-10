@@ -41,21 +41,27 @@ def crearUser(request, nombre=None, apellido=None, email=None):
     first_apellido = apellidoSplit[0].lower()
     second_apellido = apellidoSplit[1][:1].lower()
     
+    primerNombre = nombre_nuevo.split(" ")[0]
+    primerApellido =apellidoSplit[0]
+
     userName = first_letra + first_apellido + second_apellido
     userExiste = User.objects.filter(username=userName)
-    if userExiste == None:
+    if not userExiste:
         userPass = userName + '99'
         userEmail = email
 
         user = User.objects.create_user(username=userName,
                                         email=userEmail,
-                                        password=userPass)
+                                        password=userPass,
+                                        first_name=primerNombre,
+                                        last_name=primerApellido)
         user.save()
         del user
+        return True
 
-    return HttpResponse('')
+    return False
 
-#Recibe encuesta lista de un alumno
+##############---------FUNCION ENVIO ENCUESTA----------###################
 
 def enviarEncuesta(request):
     return HttpResponse('')
@@ -129,28 +135,6 @@ def cambiar_pass(request):
     #return render(request, 'cambiar_pass.html')
 
 
-@login_required()
-def change_pass(request):
-
-    if request.method == 'POST':
-            passVieja = request.POST.get('inputPassVieja')
-            passNueva = request.POST.get('inputPassNueva')
-            user = authenticate(username=request.user.username, password=passVieja)
-
-            if user is not None:
-                user.set_password(passNueva)
-                user.save()
-                del user
-                confirmacion = True
-            else:
-                confirmacion = False
-    del passNueva
-    del passVieja
-
-    return render(request, 'cambiar_pass.html', {'confirmacion' : confirmacion})
-
-
-
 #----------------PAGINAS CON SÓLO ACCESO DE ADMIN!
 
 
@@ -209,45 +193,70 @@ def updateEncuesta(request):
 def eliminarEncuesta(request):
     return redirect()
 
-@staff_member_required()
-def nuevoAlumno(request):
-    confirmacion = None
-    return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
-
 
 @staff_member_required()
 def crear_alumno(request):
+    template = "crear_usuario.html"
+
+    prompt = {
+    }
+
+    if request.method == 'GET':
+        return render(request, template)
     
     if request.method == 'POST':
-        alumno = Alumno()
-        nombre_alumno = request.POST.get('inputNombre')
-        apellidos_alumno = request.POST.get('inputApellido')
-        email_alumno = request.POST.get('inputEmail1')
-
-        alumno.nombre = nombre_alumno
-        alumno.apellidos = apellidos_alumno
-        alumno.rut = request.POST.get('inputRut')
-        alumno.generacion = request.POST.get('inputGeneracion')
-        alumno.email = email_alumno
-        alumno.emailPersonal = request.POST.get('inputEmail2')
-        
-        if request.POST.get('inputTipo') == 'PADRINO':
-            alumno.es_Mechon =  False
-        
-        else:
-             alumno.es_Mechon =  True
+        try:
+            alumno = Alumno()
+            nombre_alumno = request.POST.get('inputNombre')
+            apellidos_alumno = request.POST.get('inputApellido')
+            email_alumno = request.POST.get('inputEmail1')
+            txt_rut =  request.POST.get('inputRut')
+            rut = txt_rut.replace(".", "")
             
-        crearUser('post', nombre_alumno, apellidos_alumno, email_alumno)
-        usuario_alumno = User.objects.filter(email=email_alumno)
-        alumno.usuario = usuario_alumno[0]
-        alumno.save()
-        confirmacion = True
+            apellidos = apellidos_alumno.split(" ")
 
-        return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
+            if len(apellidos) == 1:
+                messages.error(request,'Ingrese al menos dos apellidos')
+                del alumno
+                return HttpResponseRedirect(reverse("crear_alumno"))
+            
+            emailSplit = email_alumno.split("@")
 
-    confirmacion = False
-    return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
+            if emailSplit[1] != "mail.pucv.cl":
+                messages.error(request,'Ingrese mail institucional válido')
+                del alumno
+                return HttpResponseRedirect(reverse("crear_alumno"))
 
+            alumno.nombre = nombre_alumno
+            alumno.apellidos = apellidos_alumno
+            alumno.rut = rut
+            alumno.generacion = request.POST.get('inputGeneracion')
+            alumno.email = email_alumno
+            alumno.emailPersonal = request.POST.get('inputEmail2')
+            
+            if request.POST.get('inputTipo') == 'PADRINO':
+                alumno.es_Mechon =  False
+            
+            else:
+                alumno.es_Mechon =  True
+                
+            if crearUser('post', nombre_alumno, apellidos_alumno, email_alumno):
+                usuario_alumno = User.objects.filter(email=email_alumno)
+                alumno.usuario = usuario_alumno[0]
+                alumno.save()
+                messages.success(request, '¡Alumno agregado con éxito!')
+                del alumno
+            else:
+                messages.error(request,'ERROR - Alumno no pudo ser creado')
+                del alumno
+                return HttpResponseRedirect(reverse("crear_alumno"))
+
+        except Exception as e:
+            messages.error(request,"No fue posible crear alumno. "+repr(e))
+            del alumno
+            return HttpResponseRedirect(reverse("crear_alumno"))
+    
+        return HttpResponseRedirect(reverse("crear_alumno"))
 
 
 @permission_required('admin.can_add_log_entry')
@@ -265,17 +274,17 @@ def import_users(request):
         try:
             csv_file = request.FILES["file"]
             if not csv_file.name.endswith('csv'):
-                messages.error(request,'No es un archivo csv')
+                messages.error(request,'ERROR - ¡No es un archivo .csv!')
                 return HttpResponseRedirect(reverse("import_users"))
             if csv_file.multiple_chunks():
-                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+                messages.error(request,"Archivo es demasiado grande (%.2f MB)." % (csv_file.size/(1000*1000),))
                 return HttpResponseRedirect(reverse("import_users"))
             file_data = csv_file.read().decode("utf-8")	
             lines = file_data.split("\n")
             for line in lines:						
                 fields = line.split(",")
                 alumnoExiste = Alumno.objects.filter(rut=fields[0])
-                if alumnoExiste == None:
+                if not alumnoExiste:
                     alumno = Alumno()
                     alumno.rut = fields[0]
                     alumno.nombre = fields[1]
@@ -294,7 +303,7 @@ def import_users(request):
                
         except Exception as e:
             logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
-            messages.error(request,"Unable to upload file. "+repr(e))
+            messages.error(request,"ERROR - No se pudo subir imagen. "+repr(e))
             redirect('import_users/')
         return HttpResponseRedirect(reverse("import_users"))
 
