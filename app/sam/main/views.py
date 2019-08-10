@@ -233,12 +233,13 @@ def crear_alumno(request):
                 del alumno
                 return HttpResponseRedirect(reverse("crear_alumno"))
 
-            alumno.nombre = nombre_alumno
-            alumno.apellidos = apellidos_alumno
+            alumno.nombre = nombre_alumno.upper()
+            alumno.apellidos = apellidos_alumno.upper()
             alumno.rut = rut
             alumno.generacion = request.POST.get('inputGeneracion')
             alumno.email = email_alumno
             alumno.emailPersonal = request.POST.get('inputEmail2')
+            alumno.carrera = request.POST.get('inputCarrera')
             
             if request.POST.get('inputTipo') == 'PADRINO':
                 alumno.es_Mechon =  False

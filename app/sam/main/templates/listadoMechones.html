@@ -46,7 +46,7 @@
                             <th>Rut</th>
                             <th>Nombre Alumno</th>
                             <th>Email Alumno</th>
-                            <th>Email Personal</th>
+                            <th>Carrera</th>
                             <th>Opciones</th>
                         </thead>
                         <tbody id="tablaBusqueda">
@@ -55,17 +55,17 @@
                                 <td>{{mechon.rut}}</td>
                                 <td>{{mechon.nombre}} {{mechon.apellidos}}</td>
                                 <td>{{mechon.email}}</td>
-                                <td>{{mechon.emailPersonal}}</td>
+                                <td>{{mechon.carrera}}</td>
                                 <td>
                                     <a href="#" style="color:#339fc3;" data-content="Editar" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-edit" style="font-size:20px; color:#339fc3;"></i>
                                     </a>
-                                    <a href="#modalDelete" data-toggle="modal" style="color:#339fc3;" data-content="Borrar" rel="popover" data-placement="bottom" data-trigger="hover">
+                                    <a href="#modalDelete{{mechon.rut}}" data-toggle="modal" style="color:#339fc3;" data-content="Borrar" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-delete" style="font-size:20px; color:#339fc3;"></i>
                                     </a>
                                 </td>
 
-                                <div id="modalDelete" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+                                <div id="modalDelete{{mechon.rut}}" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <!-- Modal content-->
                                         <div class="modal-content">
@@ -87,7 +87,7 @@
                                 </div>
                                 
                             </tr>
-                            {%endfor%}
+                            {% endfor %}
 
                         </tbody>
                     </table>
