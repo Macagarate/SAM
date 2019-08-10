@@ -8,7 +8,7 @@
         <h2>Crear Usuario</h2>
     </div>
 </div>
-{% if confirmacion %}
+{% if confirmacion == True %}
 <div class="alert alert-success" role="alert">
   ¡Alumno creado con éxito!
 </div>
@@ -25,7 +25,7 @@
             
             <div class="cuadro-form">
 
-                <form action="{% url 'crear-alumno' %}" method="post">
+                <form action="{% url 'crear-alumno' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group row">
                         <label for="inputRut" class="col-sm-2 col-form-label">Ingrese su Rut:</label>

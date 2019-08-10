@@ -3,9 +3,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from usuarios.models import Alumno
 from analisis.models import Grupo
@@ -86,6 +88,67 @@ def resultadoEncuesta(request):
 @login_required()
 def grupo(request):
     return render(request, 'grupo.html')
+
+@login_required()
+def cambiar_pass(request):
+    template = "cambiar_pass.html"
+
+    prompt = {
+    }
+
+    if request.method == 'GET':
+        return render(request, template)
+
+    if request.method == 'POST':
+        try:
+            passVieja = request.POST.get('inputPassVieja')
+            passNueva = request.POST.get('inputPassNueva')
+            passConfirmacion = request.POST.get('inputPassConfirmada')
+
+            user = authenticate(username=request.user.username, password=passVieja)
+
+            if user is not None:
+                if passNueva == passConfirmacion:
+                    user.set_password(passNueva)
+                    user.save()
+                    update_session_auth_hash(request, user)
+                    messages.success(request, '¡Contraseña cambiada con éxito!')
+                else:
+                    messages.error(request,'Las contraseñas no coinciden')
+                    return HttpResponseRedirect(reverse("cambiar_pass"))
+            else:
+                messages.error(request,'La contraseña no es la correcta')
+                return HttpResponseRedirect(reverse("cambiar_pass"))
+            
+        except Exception as e:
+            messages.error(request,"No es posible cambiar contraseña. "+repr(e))
+            return HttpResponseRedirect(reverse("cambiar_pass"))
+
+        return HttpResponseRedirect(reverse("cambiar_pass"))
+    
+    #return render(request, 'cambiar_pass.html')
+
+
+@login_required()
+def change_pass(request):
+
+    if request.method == 'POST':
+            passVieja = request.POST.get('inputPassVieja')
+            passNueva = request.POST.get('inputPassNueva')
+            user = authenticate(username=request.user.username, password=passVieja)
+
+            if user is not None:
+                user.set_password(passNueva)
+                user.save()
+                del user
+                confirmacion = True
+            else:
+                confirmacion = False
+    del passNueva
+    del passVieja
+
+    return render(request, 'cambiar_pass.html', {'confirmacion' : confirmacion})
+
 
 
 #----------------PAGINAS CON SÓLO ACCESO DE ADMIN!
@@ -182,7 +245,8 @@ def crear_alumno(request):
 
         return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
 
-    return HttpResponse('404 OK')
+    confirmacion = False
+    return render(request, 'crear_usuario.html', {'confirmacion' : confirmacion})
 
 
 

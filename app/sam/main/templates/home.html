@@ -44,12 +44,14 @@
                 <li class="divider"></li>
                 {% if request.user.is_superuser %}
                 {% else %}
-
                 <li>
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Ficha Consolidada</a>
                     <ul class="collapse list-unstyled" id="homeSubmenu">
                         <li>
                             <a href="{% url 'perfil' %}">Datos Personales</a>
+                        </li>
+                         <li>
+                            <a href="{% url 'cambiar_pass' %}">Cambiar Contrase&ntilde;a</a>
                         </li>
                     </ul>
                 </li>
@@ -147,7 +149,7 @@
                                     <li class="dropdown-header">
                                         Hola
                                         <br>
-                                        <p style="text-transform: uppercase;">{{ perfil.nombre }} {{ perfil.apellidos}}</p>
+                                        <p>{{ user.get_username }}</p>
                                     </li>
                                     <li class="divider"></li>
                                     <li class="divider"></li>

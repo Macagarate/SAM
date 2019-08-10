@@ -1,12 +1,14 @@
 var Fn = {
-    // Valida el rut con su cadena completa "XXXXXXXX-X"
+    // Valida el rut con su cadena completa "XXXXXXXX-X" con puntos o sin puntos
     validaRut : function (rutCompleto) {
-        rutCompleto = rutCompleto.replace("‐","-");
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( rutCompleto ))
+        if (!/^0*(\d{1,3}(\.?\d{3})*)\-([\dkK])$/.test( rutCompleto )) {
             return false;
-        var tmp     = rutCompleto.split('-');
-        var digv    = tmp[1]; 
-        var rut     = tmp[0];
+        }
+
+        var res = rutCompleto.replace(/\./g, '');
+        var tmp = res.split('-');
+        var digv = tmp[1]; 
+        var rut = tmp[0];
         if ( digv == 'K' ) digv = 'k' ;
         
         return (Fn.dv(rut) == digv );
