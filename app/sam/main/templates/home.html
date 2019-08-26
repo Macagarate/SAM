@@ -46,7 +46,7 @@
                 {% else %}
                 <li>
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Ficha Consolidada</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <ul class="collapse list-unstyled show" id="homeSubmenu">
                         <li>
                             <a href="{% url 'perfil' %}">Datos Personales</a>
                         </li>
@@ -59,7 +59,7 @@
                 
                 <li>
                     <a href="#encuestaSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Encuesta</a>
-                    <ul class="collapse list-unstyled" id="encuestaSubmenu">
+                    <ul class="collapse list-unstyled show" id="encuestaSubmenu">
                         
                         {% if request.user.is_superuser %}
                         <li>
@@ -82,7 +82,7 @@
                 </li>
                 <li>
                     <a href="#grupoSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Apadrinamiento</a>
-                    <ul class="collapse list-unstyled" id="grupoSubmenu">
+                    <ul class="collapse list-unstyled show" id="grupoSubmenu">
                         {% if request.user.is_superuser %}
                         <li>
                             <a href="{% url 'grupos' %}">Grupos</a>
@@ -107,7 +107,7 @@
                 {% if request.user.is_superuser %}
                 <li>
                     <a href="#matchmakingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Matchmaking</a>
-                    <ul class="collapse list-unstyled" id="matchmakingSubmenu">
+                    <ul class="collapse list-unstyled show" id="matchmakingSubmenu">
                         <li>
                             <a href="{% url 'matchmaking:index' %}">Realizar Emparejamiento</a>
                         </li>

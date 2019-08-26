@@ -203,10 +203,7 @@ def eliminarEncuesta(request):
 @staff_member_required()
 def crear_alumno(request):
     template = "crear_usuario.html"
-
-    prompt = {
-    }
-
+    
     if request.method == 'GET':
         return render(request, template)
     
