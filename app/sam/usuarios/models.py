@@ -13,7 +13,9 @@ class Alumno(models.Model):
   emailPersonal = models.EmailField(default=None, max_length=254)
   es_Mechon=models.BooleanField(default=None)
   usuario = models.OneToOneField(User, on_delete = models.CASCADE)
-  #FALTA CARRERA
+  carrera = models.CharField(max_length = 254)
+
+  #ya no falta carrera
 
 
   def __str__(self):

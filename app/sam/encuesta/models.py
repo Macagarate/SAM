@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 class Encuesta(models.Model):
   anno = models.DateField(default=date.today)
-  activado = models.BooleanField(default=False)
+  activado = models.BooleanField(default=False) #status 0|1
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   
