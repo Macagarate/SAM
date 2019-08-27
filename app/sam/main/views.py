@@ -319,6 +319,16 @@ def crear_alumno(request):
                 usuario_alumno = User.objects.filter(email=email_alumno)
                 alumno.usuario = usuario_alumno[0]
                 alumno.save()
+                now = date.today().year
+                actividad = Actividad()
+                actividad.alumno = Alumno.objects.get(rut=rut)
+                actividad.status = True
+                actividad.anno_participacion = now
+                if request.POST.get('inputGeneracion') == now:
+                    actividad.rol = 0        
+                else:
+                    actividad.rol = 1
+                actividad.save()
                 messages.success(request, '¡Alumno agregado con éxito!')
                 del alumno
             else:
