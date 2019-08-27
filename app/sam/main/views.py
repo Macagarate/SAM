@@ -120,7 +120,7 @@ def encuesta(request):
         alternativas = PreguntaAlternativa.objects.all()
         del actividad
         del alumno
-        messages.info(request, 'Sólo puede responder una vez, responda con conciencia.')
+        messages.info(request, 'Sólo se puede responder una vez, responda con conciencia.')
         return render(request, 'encuesta.html', {'preguntas': preguntas, 'alternativas': alternativas})
 
     del encuesta
