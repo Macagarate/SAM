@@ -225,7 +225,9 @@ def resultadosEncuestas(request):
 @staff_member_required()
 def encuestas(request):
     encuestas = Encuesta.objects.all()
-    return render(request, 'encuestas.html',{'encuestas': encuestas})
+    preguntas = EncuestaPregunta.objects.all()
+    alternativas = PreguntaAlternativa.objects.all()
+    return render(request, 'encuestas.html', {'encuestas': encuestas, 'preguntas': preguntas, 'alternativas': alternativas})
 
 @staff_member_required()
 def crearEncuesta(request):

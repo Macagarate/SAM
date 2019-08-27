@@ -10,6 +10,8 @@ class Encuesta(models.Model):
   activado = models.BooleanField(default=False)
   def __str__(self):
       return self.description
+  def get_fecha(self):
+     return self.created_at.strftime('%d/%m/%Y')
 
 class Pregunta(models.Model):
   description = models.CharField(max_length = 255)
