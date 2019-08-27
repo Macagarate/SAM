@@ -12,9 +12,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from usuarios.models import Alumno
 from analisis.models import Grupo
-from encuesta.models import Encuesta
+from encuesta.models import Encuesta, Pregunta, Alternativa
+from analisis.models import Resultado, Afinacion, Grupo
 import datetime 
-from datetime import date
+from datetime import date, datetime
 import logging
 from django.urls import reverse
 from django.template import *
@@ -66,7 +67,39 @@ def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nue
 ##############---------FUNCION ENVIO ENCUESTA----------###################
 
 def enviarEncuesta(request):
-    return HttpResponse('')
+    template = "encuesta.html"
+
+    if request.method == 'GET':
+        return render(request, template)
+
+    if request.method == 'POST':
+        try:
+            passVieja = request.POST.get('inputPassVieja')
+            passNueva = request.POST.get('inputPassNueva')
+            passConfirmacion = request.POST.get('inputPassConfirmada')
+
+            user = authenticate(username=request.user.username, password=passVieja)
+
+            if user is not None:
+                if passNueva == passConfirmacion:
+                    user.set_password(passNueva)
+                    user.save()
+                    update_session_auth_hash(request, user)
+                    messages.success(request, '¡Contraseña cambiada con éxito!')
+                else:
+                    messages.error(request,'Las contraseñas no coinciden')
+                    return HttpResponseRedirect(reverse("cambiar_pass"))
+            else:
+                messages.error(request,'La contraseña no es la correcta')
+                return HttpResponseRedirect(reverse("cambiar_pass"))
+            
+        except Exception as e:
+            messages.error(request,"No es posible cambiar contraseña. "+repr(e))
+            return HttpResponseRedirect(reverse("cambiar_pass"))
+
+        return HttpResponseRedirect(reverse("cambiar_pass"))
+    
+    #return render(request, 'cambiar_pass.html')
 
 
 ##############---------FUNCIONES DE RENDER----------####################
@@ -79,7 +112,19 @@ def index(request):
 
 @login_required()
 def encuesta(request):
-    return render(request, 'encuesta.html')
+    alumno = Alumno.objects.get(usuario=request.user.id)
+    resultados = Resultado.objects.filter(alumno=alumno)
+    print (resultados)
+
+    if not resultados:
+        encuesta = Encuesta.objects.get(activado=True)
+        preguntas = Pregunta.objects.filter(encuesta = encuesta.id)
+        alternativas = Alternativa.objects.all()
+        return render(request, 'encuesta.html', {'preguntas':preguntas, 'alternativas':alternativas})
+
+    else:
+        messages.success(request, 'Usted ya respondió la encuesta') 
+        return render(request, 'home.html')
 
 
 @login_required()
