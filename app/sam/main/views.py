@@ -12,9 +12,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from usuarios.models import Alumno, Actividad
 from analisis.models import Grupo
-from encuesta.models import Encuesta, Pregunta, Alternativa
+from encuesta.models import Encuesta, Pregunta, Alternativa, EncuestaPregunta, PreguntaAlternativa
 from analisis.models import Respuesta, Afinacion, Grupo
-import datetime 
+import datetime
 from datetime import date, datetime
 import logging
 from django.urls import reverse
@@ -82,14 +82,17 @@ def index(request):
 
 @login_required()
 def encuesta(request):
-    actividad = Alumno.objects.get(usuario=request.user.id)
-    resultados = Respuesta.objects.filter(alumno=alumno)
-    print (resultados)
+    now = date.today().year
+    encuesta = Encuesta.objects.get(activado=True)
+    alumno = Alumno.objects.get(usuario=request.user.id)
+    actividad = Actividad.objects.filter(alumno=alumno, anno_participacion=now)
 
-    if not resultados:
-        encuesta = Encuesta.objects.get(activado=True)
-        preguntas = Pregunta.objects.filter(encuesta = encuesta.id)
-        alternativas = Alternativa.objects.all()
+    print (actividad)
+
+    if not actividad:
+        
+        preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
+        alternativas = PreguntaAlternativa.objects.all()
         return render(request, 'encuesta.html', {'preguntas':preguntas, 'alternativas':alternativas})
 
     else:
