@@ -79,18 +79,7 @@ def enviarEncuesta(request):
             encuesta = Encuesta.objects.get(activado=True)
             alumno = Alumno.objects.get(usuario=request.user.id)
             preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
-            actividad = Actividad()
-            actividad.alumno = alumno
-            actividad.status = True
-            actividad.anno_participacion = now
 
-            if alumno.generacion == now:
-                actividad.rol = 0
-            
-            else:
-                actividad.rol = 1
-
-            actividad.save()
             for p in preguntas:
                 respuesta = Respuesta()
                 respuesta.encuesta = encuesta
@@ -123,22 +112,24 @@ def encuesta(request):
     now = date.today().year
     encuesta = Encuesta.objects.get(activado=True)
     alumno = Alumno.objects.get(usuario=request.user.id)
-    actividad = Actividad.objects.filter(alumno=alumno, anno_participacion=now)
-    #print(actividad)
+    actividad = Actividad.objects.filter(alumno=alumno)
 
-    if not actividad:
-        preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
-        alternativas = PreguntaAlternativa.objects.all()
-        del actividad
-        del alumno
-        return render(request, 'encuesta.html', {'preguntas': preguntas, 'alternativas': alternativas})
+    for a in actividad:
 
-    else:
-        del encuesta
-        del alumno
-        del actividad
-        messages.success(request, 'Usted ya respondió la encuesta')
-        return render(request, 'home.html')
+        if a.anno_participacion == now:
+
+            del encuesta
+            del alumno
+            del actividad
+            messages.success(request, 'Usted ya respondió la encuesta')
+            return render(request, 'home.html')
+    
+    preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
+    alternativas = PreguntaAlternativa.objects.all()
+    del actividad
+    del alumno
+    return render(request, 'encuesta.html', {'preguntas': preguntas, 'alternativas': alternativas})
+            
 
 
 @login_required()
@@ -413,6 +404,17 @@ def import_users(request):
                     alumno.usuario = usuario_alumno[0]
                     alumno.save()
                     del alumno
+                now = date.today().year
+                actividad = Actividad()
+                actividad.alumno = Alumno.objects.get(rut=fields[0])
+                actividad.status = True
+                actividad.anno_participacion = now
+                if fields[7] == now:
+                    actividad.rol = 0        
+                else:
+                    actividad.rol = 1
+                actividad.save()
+
             messages.success(request, '¡Importación exitosa!')   
         
         except Exception as e:
