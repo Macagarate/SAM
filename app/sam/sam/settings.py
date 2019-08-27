@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'matchmaking.apps.MatchmakingConfig',
     'encuesta.apps.EncuestaConfig',
     'usuarios.apps.UsuariosConfig',
-    'analisis.apps.AnalisisConfig',
-    
+    'analisis.apps.AnalisisConfig',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -88,10 +87,12 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'proyecto_sam',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'PROYECTO_SAM',
         'HOST': 'localhost',
         'USER': 'sam',
-        'PASSWORD':'sam123',
+        'PASSWORD':'',
+        'PORT': '3306'
     }
 
     #'default': {

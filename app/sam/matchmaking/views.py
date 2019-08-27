@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import Person, Preference
+from .models import Preferencia
+from usuarios.models import Actividad
 from matching.games.stable_marriage import StableMarriage
 
 # Create your views here.
@@ -11,20 +12,20 @@ def index(request):
 
 def get_padrinos():
     padrinos = []
-    persona_set  = Person.objects.filter(type_student='PR')
+    persona_set  = Actividad.objects.filter(rol=1)
     for p in persona_set:
         aux = dict()
         aux['user'] = p.name
-        aux['preferences'] = Preference.objects.filter(pref_from=p).order_by('pref_order')
+        aux['preferences'] = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
         padrinos.append(aux)
     return padrinos
 def get_ahijados():
     ahijados = []
-    persona_set  = Person.objects.filter(type_student='AH')
+    persona_set  = Actividad.objects.filter(rol=0)
     for p in persona_set:
         aux = dict()
         aux['user'] = p.name
-        aux['preferences'] = Preference.objects.filter(pref_from=p).order_by('pref_order')
+        aux['preferences'] = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
         ahijados.append(aux)
     return ahijados
 
