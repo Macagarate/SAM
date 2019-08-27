@@ -5,32 +5,36 @@ from datetime import date, datetime
 #CLASE ENCUESTA
 
 class Encuesta(models.Model):
-  anno = models.DateField(default=date.today)
-  activado = models.BooleanField(default=False) #status 0|1
+  description = models.CharField(max_length = 255)
   created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
-  
-  def get_year(self):
-    return self.anno.year
-
-#CLASE PREGUNTA ASOCIADA A UNA ENCUESTA
+  def __str__(self):
+      return self.description
 
 class Pregunta(models.Model):
-  texto = models.TextField()
-  tipoObligatoria = models.BooleanField(default=True)
-  encuesta = models.ForeignKey(Encuesta, on_delete = models.CASCADE)
+  description = models.CharField(max_length = 255)
   created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
-
   def __str__(self):
-    return self.texto
+      return self.description
 
 class Alternativa(models.Model):
-  texto = models.TextField()
-  pregunta = models.ForeignKey(Pregunta, related_name='alternativa_pregunta',on_delete = models.CASCADE)
+  description = models.CharField(max_length = 255)
   created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
-
   def __str__(self):
-    return self.texto
-  
+      return self.description
+
+class EncuestaPregunta(models.Model):
+  encuesta = models.ForeignKey(Encuesta, on_delete = models.PROTECT)
+  pregunta = models.ForeignKey(Pregunta, on_delete = models.PROTECT)
+  order = models.IntegerField(default=0)
+  created_at = models.DateTimeField(auto_now_add=True)
+  def __str__(self):
+      return 'Encuesta={0}, Pregunta={1}, Posicion={2}'.format(self.encuesta, self.pregunta,self.order)
+
+
+class PreguntaAlternativa(models.Model):
+    pregunta = models.ForeignKey(Pregunta,on_delete= models.PROTECT)
+    alternativa = models.ForeignKey(Alternativa,on_delete = models.PROTECT)
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+      return 'Pregunta={0}, Alternativa={1}, Posicion={2}'.format(self.pregunta, self.alternativa,self.order)
