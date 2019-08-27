@@ -17,7 +17,9 @@ from usuarios.models import Actividad
 
 class Grupo(models.Model):
   numero = models.IntegerField(default=0)
-  padrino = models.ForeignKey(Alumno, on_delete = models.CASCADE)
+  anno =  models.IntegerField(default=date.today().year)
+  padrino = models.ForeignKey(Alumno, on_delete = models.CASCADE, related_name = 'padrino_asig')
+  ahijado = models.ForeignKey(Alumno, on_delete = models.CASCADE, related_name = 'ahijado_asig', default=None)
 
 
 

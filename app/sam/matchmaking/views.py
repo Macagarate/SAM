@@ -15,7 +15,7 @@ def get_padrinos():
     persona_set  = Actividad.objects.filter(rol=1)
     for p in persona_set:
         aux = dict()
-        aux['user'] = p.name
+        aux['user'] = p.alumno
         aux['preferences'] = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
         padrinos.append(aux)
     return padrinos
@@ -24,7 +24,7 @@ def get_ahijados():
     persona_set  = Actividad.objects.filter(rol=0)
     for p in persona_set:
         aux = dict()
-        aux['user'] = p.name
+        aux['user'] = p.alumno
         aux['preferences'] = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
         ahijados.append(aux)
     return ahijados
