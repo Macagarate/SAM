@@ -101,9 +101,6 @@ def grupo(request):
 def cambiar_pass(request):
     template = "cambiar_pass.html"
 
-    prompt = {
-    }
-
     if request.method == 'GET':
         return render(request, template)
 
@@ -173,16 +170,38 @@ def encuestas(request):
 
 @staff_member_required()
 def crearEncuesta(request):
-    encuesta = Encuesta()
+    template = "crear_encuesta.html"
+
+    if request.method == 'GET':
+        return render(request, template)
+    
     if request.method == 'POST':
-        anno = request.POST.get('annio')
-        encuesta.anno = datetime.date(int(anno),1,1)
-        encuesta.save()
-        return redirect('encuestas')
+        try:
+            encuesta = Encuesta()
+            anno = request.POST.get('inputAnno')
+            encuesta.anno = datetime.date(int(anno),1,1)
+            activado = request.POST.get('inputActivo')
+            
+            if activado == '1':
+                encuesta.activado = True
+                for i in Encuesta.objects.all():
+                    i.activado = False
+                    i.save()
+
+            encuesta.save()
+            messages.success(request, '¡Encuesta agregada con éxito!')
+            del encuesta
+
+        except Exception as e:
+            messages.error(request,"No fue posible crear encuesta. "+repr(e))
+            del encuesta
+            return HttpResponseRedirect(reverse("crearEncuesta"))
+            
+        return HttpResponseRedirect(reverse("crearEncuesta"))
 
 @staff_member_required()
 def verEncuesta(request, encuesta_id):
-    encuesta = get_object_or_404(Encuesta, pk=encuesta_id)
+    encuesta = Encuesta.objects.filter(id=encuesta_id)
     return render(request,'encuesta_ver.html',{'encuesta': encuesta})
 
 @staff_member_required()
@@ -203,7 +222,7 @@ def eliminarEncuesta(request):
 @staff_member_required()
 def crear_alumno(request):
     template = "crear_usuario.html"
-    
+
     if request.method == 'GET':
         return render(request, template)
     

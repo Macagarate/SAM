@@ -14,7 +14,7 @@ urlpatterns = [
    path('404/', views.handler404, name="404"),
    path('500/', views.handler500, name="500"),
 
-   # Parte de encuestas
+   # Encuesta
    path('encuesta/', views.encuesta, name="encuesta"),
    path('encuestas/', views.encuestas, name="encuestas"),
    path('encuestas/crear_encuesta', views.crearEncuesta, name="crearEncuesta"),
