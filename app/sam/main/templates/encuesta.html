@@ -15,13 +15,16 @@
             <h6>Responde a todas las preguntas que aparecen a continuación.</h6>
         </div>
     </div>
+    <br>
 
     {% if messages %}
         {% for message in messages %}
             {% if  message.tags == "error" %}
                 <div class="alert alert-danger" role="alert">
+            {% elif message.tags == "info" %}
+                <div class="alert alert-warning" role="alert">
             {% else %}
-            <div class="alert alert-success" role="alert">
+                <div class="alert alert-success" role="alert">
             {% endif %}
             {{message}}
             </div>

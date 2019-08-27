@@ -112,23 +112,24 @@ def encuesta(request):
     now = date.today().year
     encuesta = Encuesta.objects.get(activado=True)
     alumno = Alumno.objects.get(usuario=request.user.id)
-    actividad = Actividad.objects.filter(alumno=alumno)
+    actividad = Actividad.objects.get(alumno=alumno, anno_participacion=now)
+    respuesta = Respuesta.objects.filter(actividad=actividad)
+        
+    if not respuesta:
+        preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
+        alternativas = PreguntaAlternativa.objects.all()
+        del actividad
+        del alumno
+        messages.info(request, 'Sólo puede responder una vez, responda con conciencia.')
+        return render(request, 'encuesta.html', {'preguntas': preguntas, 'alternativas': alternativas})
 
-    for a in actividad:
-
-        if a.anno_participacion == now:
-
-            del encuesta
-            del alumno
-            del actividad
-            messages.success(request, 'Usted ya respondió la encuesta')
-            return render(request, 'home.html')
-    
-    preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
-    alternativas = PreguntaAlternativa.objects.all()
-    del actividad
+    del encuesta
     del alumno
-    return render(request, 'encuesta.html', {'preguntas': preguntas, 'alternativas': alternativas})
+    del actividad
+    messages.success(request, 'Usted ya respondió la encuesta')
+    return render(request, 'home.html')
+    
+    
             
 
 
