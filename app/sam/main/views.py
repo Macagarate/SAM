@@ -70,6 +70,44 @@ def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nue
 def enviarEncuesta(request):
     template = "encuesta.html"
 
+    if request.method == 'GET':
+        return render(request, template)
+
+    if request.method == 'POST':
+        try:
+            now = date.today().year
+            encuesta = Encuesta.objects.get(activado=True)
+            alumno = Alumno.objects.get(usuario=request.user.id)
+            preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
+            actividad = Actividad()
+            actividad.alumno = alumno
+            actividad.status = True
+            actividad.anno_participacion = now
+
+            if alumno.generacion == now:
+                actividad.rol = 0
+            
+            else:
+                actividad.rol = 1
+
+            actividad.save()
+            for p in preguntas:
+                respuesta = Respuesta()
+                respuesta.encuesta = encuesta
+                respuesta.pregunta = p.pregunta
+                respuesta.alternativa = Alternativa.objects.get(id=request.POST.get(str(p.pregunta.id)))
+                respuesta.actividad = Actividad.objects.get(alumno=alumno, anno_participacion=now)
+                respuesta.save()
+                
+            messages.success(request, '¡Encuesta contestada exitosamente!')
+            return HttpResponseRedirect(reverse("resultadoEncuesta"))
+        
+        except Exception as e:
+            messages.error(request,"No fue posible enviar encuesta. "+repr(e))
+            return HttpResponseRedirect(reverse("encuesta"))
+
+
+    return render(request, 'home.html')
 
 
 ##############---------FUNCIONES DE RENDER----------####################
@@ -86,17 +124,20 @@ def encuesta(request):
     encuesta = Encuesta.objects.get(activado=True)
     alumno = Alumno.objects.get(usuario=request.user.id)
     actividad = Actividad.objects.filter(alumno=alumno, anno_participacion=now)
-
-    print (actividad)
+    #print(actividad)
 
     if not actividad:
-        
         preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
         alternativas = PreguntaAlternativa.objects.all()
-        return render(request, 'encuesta.html', {'preguntas':preguntas, 'alternativas':alternativas})
+        del actividad
+        del alumno
+        return render(request, 'encuesta.html', {'preguntas': preguntas, 'alternativas': alternativas})
 
     else:
-        messages.success(request, 'Usted ya respondió la encuesta') 
+        del encuesta
+        del alumno
+        del actividad
+        messages.success(request, 'Usted ya respondió la encuesta')
         return render(request, 'home.html')
 
 

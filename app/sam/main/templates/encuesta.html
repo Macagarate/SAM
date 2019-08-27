@@ -39,18 +39,18 @@
                             </br>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <center><h3>{{p.texto}}</h3></center>
+                                    <center><h3>{{p.pregunta.description}}</h3></center>
                                 </div>
                             </div>
                         </div>
 
                         <div class="cuadro-respuesta">
                             {% for a in alternativas %}
-                            {% if a.pregunta == p %}
+                            {% if a.pregunta == p.pregunta %}
                             </br>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <input type="radio" name="inputQuestion{{p.id}}" value="{{a.id}}"> {{a.texto}}
+                                    <input type="radio" name="{{p.pregunta.id}}" value="{{a.alternativa.id}}" required> {{a.alternativa.description}}
                                 </div>
                             </div>
                             {% endif %}

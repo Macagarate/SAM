@@ -28,7 +28,7 @@ class Alumno(models.Model):
 class Actividad(models.Model):
   alumno = models.ForeignKey(Alumno, on_delete = models.PROTECT)
   anno_participacion = models.IntegerField(default=0)
-  rol = models.IntegerField(default=0)
+  rol = models.IntegerField(default=0) #Padrino 1 | Ahijado 0
   status = models.BooleanField(default=False)  #status 0|1 
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
