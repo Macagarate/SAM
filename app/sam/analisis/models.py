@@ -5,6 +5,7 @@ from encuesta.models import Alternativa
 from encuesta.models import Pregunta
 from encuesta.models import Encuesta
 from usuarios.models import Alumno
+from usuarios.models import Actividad
 
 
 
@@ -51,12 +52,9 @@ class Respuesta(models.Model):
     respuesta = models.IntegerField(default=0,max_length = 5)
 
  """
-
-
+ 
 class Respuesta(models.Model):
-  alumno = models.ForeignKey(Alumno,related_name='alumno_respuesta',on_delete = models.PROTECT)
+  actividad = models.ForeignKey(Actividad,related_name='alumno_actividad',on_delete = models.PROTECT)
   encuesta = models.ForeignKey(Encuesta,related_name='survey_respuesta', on_delete = models.PROTECT)
   pregunta = models.ForeignKey(Pregunta,related_name='question_respuesta', on_delete = models.PROTECT)
   alternativa = models.ForeignKey(Alternativa,related_name='alt_respuesta', on_delete = models.PROTECT)
-  
-

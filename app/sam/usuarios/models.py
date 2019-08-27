@@ -17,7 +17,7 @@ class Alumno(models.Model):
   usuario = models.OneToOneField(User, on_delete = models.CASCADE)
 
   def __str__(self):
-    return u"%s %s" % (self.nombre, self.apellidos)
+    return 'Rut={0}, Nombre={1}, Apellidos={2}, Generacion={3}, Carrera={4}'.format(self.rut, self.nombre,self.apellidos,self.generacion,self.carrera)
 
 class Actividad(models.Model):
   alumno = models.ForeignKey(Alumno, on_delete = models.PROTECT)
@@ -26,12 +26,6 @@ class Actividad(models.Model):
   status = models.BooleanField(default=False)  #status 0|1 
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
-  #ref_encuesta = models.ForeignKey(Encuesta, on_delete = models.PROTECT)
-  
-  #ref_pregunta = models.ForeignKey(Pregunta, on_delete = models.CASCADE)
-  #ref_respuesta = models.ForeignKey(Respuesta, on_delete = models.CASCADE)
-  #ref_preguntas = models.ManyToManyField(Pregunta)
-  #ref_respuestas = models.ManyToManyField(Respuesta)
 
   def __str__(self):
-    return 
+    return 'Alumno=({0}), Año Participacion={1}, Rol={2}'.format(self.alumno, self.anno_participacion,self.rol)
