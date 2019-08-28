@@ -34,7 +34,7 @@
             <div class="sidebar-header">
                 <div class="logo">
                     <a href="{% url 'home' %}" class="simple-text">
-                        <img src="{% static 'sam/imagen/Logo-color(2).png' %}" class="img-responsive"
+                        <img src="{% static 'sam/imagen/SAM_thumbnail(2).png' %}" class="img-responsive"
                             alt="Responsive image">
                     </a>
                 </div>
@@ -44,12 +44,14 @@
                 <li class="divider"></li>
                 {% if request.user.is_superuser %}
                 {% else %}
-
                 <li>
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Ficha Consolidada</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <ul class="collapse list-unstyled show" id="homeSubmenu">
                         <li>
                             <a href="{% url 'perfil' %}">Datos Personales</a>
+                        </li>
+                         <li>
+                            <a href="{% url 'cambiar_pass' %}">Cambiar Contrase&ntilde;a</a>
                         </li>
                     </ul>
                 </li>
@@ -57,7 +59,7 @@
                 
                 <li>
                     <a href="#encuestaSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Encuesta</a>
-                    <ul class="collapse list-unstyled" id="encuestaSubmenu">
+                    <ul class="collapse list-unstyled show" id="encuestaSubmenu">
                         
                         {% if request.user.is_superuser %}
                         <li>
@@ -80,7 +82,7 @@
                 </li>
                 <li>
                     <a href="#grupoSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Apadrinamiento</a>
-                    <ul class="collapse list-unstyled" id="grupoSubmenu">
+                    <ul class="collapse list-unstyled show" id="grupoSubmenu">
                         {% if request.user.is_superuser %}
                         <li>
                             <a href="{% url 'grupos' %}">Grupos</a>
@@ -89,14 +91,11 @@
                             <a href="{% url 'padrinos' %}">Padrinos</a>
                         </li>
                         <li>
-                            <a href="{% url 'mechones' %}">Mechones</a>
+                            <a href="{% url 'mechones' %}">Ahijados</a>
                         </li>
                         <li>
                             <a href="{% url 'import_users' %}">Importación</a>
                         </li>
-                        <li>
-                                <a href="{% url 'matchmaking:index' %}">Matchmaking</a>
-                            </li>
                         {% else %}
                         <li>
                             <a href="{% url 'grupo' %}">Tu Grupo</a>
@@ -105,6 +104,16 @@
 
                     </ul>
                 </li>
+                {% if request.user.is_superuser %}
+                <li>
+                    <a href="#matchmakingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Matchmaking</a>
+                    <ul class="collapse list-unstyled show" id="matchmakingSubmenu">
+                        <li>
+                            <a href="{% url 'matchmaking:index' %}">Realizar Emparejamiento</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
         </nav>
 
@@ -126,8 +135,8 @@
                     </button>
 
                     <div class="navbar-header">
-                        <img src="{% static 'sam/imagen/logo-nave(1).png' %}" class="img-responsive"
-                            alt="Responsive image">
+                        <img src="{% static 'sam/imagen/logoPUCV.png' %}" class="img-responsive"
+                            alt="Responsive image" width="150">
                     </div>
 
                     <div class="collapse navbar-collapse">
@@ -140,7 +149,7 @@
                                     <li class="dropdown-header">
                                         Hola
                                         <br>
-                                        <p style="text-transform: uppercase;">{{ perfil.nombre }} {{ perfil.apellidos}}</p>
+                                        <p>{{ user.get_full_name }}</p>
                                     </li>
                                     <li class="divider"></li>
                                     <li class="divider"></li>
@@ -161,9 +170,27 @@
 
             <div class="container-fluid d-flex flex-column">
 
-            {% block content %} 
+            {% block content %}
+
+             {% if messages %}
+                {% for message in messages %}
+                    {% if  message.tags == "error" %}
+                        <div class="alert alert-danger" role="alert">
+                    {% else %}
+                    <div class="alert alert-success" role="alert">
+                    {% endif %}
+                    {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <div class="jumbotron">
-                <h1>¡Bienvenido a SAM!</h1>
+                <h1>¡Bienvenido! </h1>
+                 </br>
+                    <img src="{% static 'sam/imagen/SAM_logo.png' %}" class="img-responsive"
+                            alt="Responsive image" width="150" align="top">
+                </br>
+                </br>
                 <h3>Sistema de Acompañamiento Mechón</h3>
                 <p>SAM es un sistema de emparejamiento virtual que, mediante un práctico cuestionario personal, genera un perfil único por cada estudiante. 
                     Esto facilitará el agrupamiento entre padrinos y mechones, en base a las similitudes entre sus perfiles (gustos, intereses y pasatiempos) 
@@ -196,6 +223,8 @@
         crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="{% static 'sam/js/validarut.js' %}"></script>
+    <script type="text/javascript" src="{% static 'sam/js/validapass.js' %}"></script>
+    <script type="text/javascript" src="{% static 'sam/js/agregapregunta.js' %}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

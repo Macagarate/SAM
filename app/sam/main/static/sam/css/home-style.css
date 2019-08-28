@@ -434,9 +434,6 @@ button#botonRegistrarse {
     align-content: right;
 }
 
-#msgerror {
-    color: red ! important;
-}
 
 /*------------------------------------- Card */
 
@@ -582,7 +579,6 @@ div#modalDetalles .modal-dialog {
 	display: initial;
 	max-width: 100%;
 }
-
 
 /*------------------------------------- Filtro */
 
