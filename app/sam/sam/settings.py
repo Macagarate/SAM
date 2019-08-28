@@ -88,7 +88,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'NAME': 'PROYECTO_SAM',
+        'NAME': 'PROYECTO_SAM_2',
         'HOST': 'localhost',
         'USER': 'sam',
         'PASSWORD':'',
