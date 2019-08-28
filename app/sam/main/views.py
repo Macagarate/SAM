@@ -146,7 +146,13 @@ def resultadoEncuesta(request):
 
 @login_required()
 def grupo(request):
+
     return render(request, 'grupo.html')
+
+
+
+##############---------FUNCION DE CAMBIO PASSWORD----------####################
+
 
 @login_required()
 def cambiar_pass(request):
@@ -194,17 +200,21 @@ def listadoMechones(request):
     return render(request, 'listadoMechones.html', {'mechones': mechones})
 
 
+
 @staff_member_required()
 def listadoPadrinos(request):
     padrinos = Alumno.objects.filter(es_Mechon=False)
     return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
 
 
+
 @staff_member_required()
 def grupos(request):
+    now = date.today().year
     grupos = Grupo.objects.all()
-    return render(request, 'grupos.html', {'grupos': grupos})
-    #return render(request, 'grupos.html')
+    actividades = Actividad.objects.filter(anno_participacion=now, rol=1)
+    print(grupos)
+    return render(request, 'grupos.html', {'grupos': grupos, 'actividades': actividades})
 
 ##############---------CRUD ENCUESTA----------###################
 

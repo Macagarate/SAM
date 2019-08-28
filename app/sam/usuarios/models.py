@@ -26,7 +26,7 @@ class Alumno(models.Model):
     return 'Rut={0}, Nombre={1}, Apellidos={2}, Generacion={3}, Carrera={4}'.format(self.rut, self.nombre,self.apellidos,self.generacion,self.carrera)
 
 class Actividad(models.Model):
-  alumno = models.ForeignKey(Alumno, on_delete = models.PROTECT)
+  alumno = models.ForeignKey(Alumno, on_delete = models.CASCADE)
   anno_participacion = models.IntegerField(default=0)
   rol = models.IntegerField(default=0) #Padrino 1 | Ahijado 0
   status = models.BooleanField(default=False)  #status 0|1 
