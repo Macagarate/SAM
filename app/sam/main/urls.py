@@ -10,7 +10,11 @@ urlpatterns = [
    path('logout/', auth_views.LogoutView.as_view(), name="logout"),
    path('home/', views.index, name="home"),
    
-   # Parte de encuentas
+   # HANDLERS
+   path('404/', views.handler404, name="404"),
+   path('500/', views.handler500, name="500"),
+
+   # Encuesta
    path('encuesta/', views.encuesta, name="encuesta"),
    path('encuestas/', views.encuestas, name="encuestas"),
    path('encuestas/crear_encuesta', views.crearEncuesta, name="crearEncuesta"),
@@ -19,7 +23,7 @@ urlpatterns = [
    path('encuestas/update_encuesta', views.updateEncuesta, name="updateEncuesta"),
    path('encuestas/eliminar_encuesta', views.eliminarEncuesta, name="eliminarEncuesta"),
    
-   #Fin parte encuesta
+   #Menu Principal
    path('perfil/', views.perfil, name="perfil"),
    path('resultado/', views.resultadoEncuesta, name="resultadoEncuesta"),
    path('resultados/', views.resultadosEncuestas, name="resultadosEncuestas"),
@@ -28,11 +32,13 @@ urlpatterns = [
    path('grupos/', views.grupos, name="grupos"),
    path('grupo/', views.grupo, name="grupo"),
 
+   #Matchmaking
    path('enviar_encuesta/', views.enviarEncuesta, name="enviar_encuesta"),
-   path('crear-usuario/', views.nuevoAlumno, name="crear-usuario"),
-   path('crear-alumno/', views.crear_alumno, name="crear-alumno"),
    path('import_users/', views.import_users, name="import_users"),
 
-
+   #Usuarios
+   path('crear_alumno/', views.crear_alumno, name="crear_alumno"),
+   path('cambiar_pass/', views.cambiar_pass, name="cambiar_pass"),
+   path('borrar_alumno/<int:id_alumno>', views.borrar_alumno, name="borrar_alumno"),
 
 ]

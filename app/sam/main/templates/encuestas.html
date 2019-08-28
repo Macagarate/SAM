@@ -14,24 +14,35 @@
 <div class="col-sm-12 col-sm-offset-1">
     <div class="card">
         <div class="card-content">
+            
+            <div class="row cuadro-filtro">
+                <div class="col-xs-12 col-md-8">
+                   <a href="{% url 'crearEncuesta' %}" class="btn btn-primary btn-sm"> 
+                        <i class="zmdi zmdi-plus-circle" style="font-size:25px; color:#00000;"></i>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-md-4">
+                    <input class="form-control" id="filtroTabla" type="text" placeholder="Filtrar..">
+                </div>
+            </div>
+
             <div class="cuadro-tabla">
                 </br>
-                <button type="button" class="btn btn-primary" href="#modalCreate" data-toggle="modal">Crear nueva encuesta</button>
                 <div class="row">
                     <table class="table table-hover table-bordered">
                         <thead class="table-head">
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Año</th>
+                                <th scope="col">Fecha de Creación</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for encuesta in encuestas %}
+                            {% for e in encuestas %}
                             <tr>
-                                <th scope="row">{{encuesta.id}}</th>
-                                <td>{{encuesta.get_year}}</td>
-                                <td><a href="#" style="color:#339fc3;" data-content="Ver" rel="popover" data-placement="bottom" data-trigger="hover">
+                                <th scope="row">{{e.id}}</th>
+                                <td>{{e.get_fecha}}</td>
+                                <td><a href="#modalView" data-toggle="modal" style="color:#339fc3;" data-content="Ver" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-eye" style="font-size:20px; color:#339fc3;"></i>
                                     </a>
                                     <a href="#" style="color:#339fc3;" data-content="Editar" rel="popover" data-placement="bottom" data-trigger="hover">
@@ -40,6 +51,35 @@
                                     <a href="#modalDelete" data-toggle="modal" style="color:#339fc3;" data-content="Borrar" rel="popover" data-placement="bottom" data-trigger="hover">
                                         <i class="zmdi zmdi-delete" style="font-size:20px; color:#339fc3;"></i>
                                     </a>
+                                    
+                                    <div id="modalView" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                        <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Detalles Encuesta</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <ul class="list-group list-group-flush">
+                                                    {% for p in preguntas %}
+                                                        {% if p.encuesta == e %}
+                                                        <li class="list-group-item list-group-item-primary">Pregunta: {{p.pregunta.description}}</li>
+                                                        {% for a in alternativas %}
+                                                            {% if a.pregunta == p.pregunta %}
+                                                            <li class="list-group-item list-group-item-secondary">{{a.alternativa.description}}</li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div id="modalDelete" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <!-- Modal content-->
@@ -60,9 +100,11 @@
                                             </div>
                                         </div>
                                     </div>
+
+
                                 </td>
                             </tr>
-                            {%endfor%}
+                            {% endfor %}
                             </tr>
                         </tbody>
                     </table>

@@ -1,81 +1,51 @@
-
-
-
 {% extends 'home.html' %}
 {% load staticfiles %}
 
 {% block content %}
 
-            <div class="jumbotron">
-                <h3>¡MatchMaking!</h3>
-                <p>Padrinos Preferences</p>
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="header text-center">
+        <h2>MatchMaking</h2>
+        </br>
+    </div>
+</div>
+
+<div class="col-sm-12 col-sm-offset-1">
+    <div class="card">
+        <div class="card-content">
+
+            <p>Padrinos Preferences</p>
                 {% for p in padrinos %}
                     <p>Name: {{p.user}}</p>
                     <ol>
                         {% for pre in p.preferences %}
                            <li>{{pre.pref_to.name}} - Orden: {{pre.pref_order}}</li>    
-                        {%endfor%}
+                        {% endfor %}
                     </ol>       
-                {%endfor%}
+                {% endfor %}
                 <p>Ahijados Preferences</p>
                 {% for a in ahijados %}
                     <p>Name: {{a.user}}</p>  
                     <ol>
                         {% for pre in a.preferences %}
                         <li>{{pre.pref_to.name}} - Orden: {{pre.pref_order}}</li>    
-                        {%endfor%}
+                        {% endfor %}
                     </ol>     
-                {%endfor%}
+                {% endfor %}
                 <p>Solucion</p>
                 <ul>
                     {% for s in solucion %}
                         <li>
                         {% for a in s %}
                             {{ a }}
-                        {%endfor%}
+                        {% endfor %}
                         </li>
-                     {%endfor%}
-                </ul>
+                     {% endfor %}
+                </ul> 
 
-
-            </div>
-            {% endblock %}   
-
-            </div>
-
-            <div class="line"></div>
-            
         </div>
     </div>
+</div>
 
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-        crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-        crossorigin="anonymous"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-                $(this).toggleClass('active');
-            });
-
-            $('li > a').click(function() {
-                $('li').removeClass('active');
-                $(this).parent().addClass('active');
-            });
-
-            
-        });
-    </script>
-</body>
-
-</html>
+    
+{% endblock %}
