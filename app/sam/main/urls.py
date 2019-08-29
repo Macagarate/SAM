@@ -33,6 +33,7 @@ urlpatterns = [
    #Matchmaking
    path('enviar_encuesta/', views.enviarEncuesta, name="enviar_encuesta"),
    path('import_users/', views.import_users, name="import_users"),
+   path('matchmaking/', views.emparejamiento, name="emparejamiento"),
 
    #Usuarios
    path('crear_alumno/', views.crear_alumno, name="crear_alumno"),

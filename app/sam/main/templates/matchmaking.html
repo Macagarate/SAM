@@ -13,35 +13,16 @@
 <div class="col-sm-12 col-sm-offset-1">
     <div class="card">
         <div class="card-content">
+        
+            <div class="cuadrotrans">
+                <center><h3>¡Está todo listo!</h3>
+                    <h5>Haga click en el siguiente botón para comenzar el match:</h5>
+                    </br>
+                    </br>
+                    <a href={% url 'matchmaking:index' %} class="btn btn-primary">EMPAREJAR</a>
+                </center>
+            </div>
 
-            <p>Padrinos Preferences</p>
-                {% for p in padrinos %}
-                    <p>Name: {{p.user}}</p>
-                    <ol>
-                        {% for pre in p.preferences %}
-                           <li>{{pre.pref_to.name}} - Orden: {{pre.pref_order}}</li>    
-                        {% endfor %}
-                    </ol>       
-                {% endfor %}
-                <p>Ahijados Preferences</p>
-                {% for a in ahijados %}
-                    <p>Name: {{a.user}}</p>  
-                    <ol>
-                        {% for pre in a.preferences %}
-                        <li>{{pre.pref_to.name}} - Orden: {{pre.pref_order}}</li>    
-                        {% endfor %}
-                    </ol>     
-                {% endfor %}
-                <p>Solucion</p>
-                <ul>
-                    {% for s in solucion %}
-                        <li>
-                        {% for a in s %}
-                            {{ a }}
-                        {% endfor %}
-                        </li>
-                     {% endfor %}
-                </ul> 
 
         </div>
     </div>

@@ -453,6 +453,14 @@ def updateAlumno(request): #Actualizar datos alumnos (NO HECHA)
 
 
 
+##############---------EMPAREJAMIENTO----------###################
+
+
+@staff_member_required()
+def emparejamiento(request): #Emparejar alumnos que tienen la encuesta contestada
+    
+    return render(request, 'matchmaking.html')
+
 
 
 ##############---------IMPORTACION----------###################
