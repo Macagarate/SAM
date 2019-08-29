@@ -54,9 +54,9 @@ class Respuesta(models.Model):
  
 class Respuesta(models.Model):
   actividad = models.ForeignKey(Actividad, related_name='alumno_actividad', on_delete = models.CASCADE)
-  encuesta = models.ForeignKey(Encuesta,related_name='survey_respuesta', on_delete = models.PROTECT)
-  pregunta = models.ForeignKey(Pregunta,related_name='question_respuesta', on_delete = models.PROTECT)
-  alternativa = models.ForeignKey(Alternativa,related_name='alt_respuesta', on_delete = models.PROTECT)
+  encuesta = models.ForeignKey(Encuesta,related_name='survey_respuesta', on_delete = models.CASCADE)
+  pregunta = models.ForeignKey(Pregunta,related_name='question_respuesta', on_delete = models.CASCADE)
+  alternativa = models.ForeignKey(Alternativa,related_name='alt_respuesta', on_delete = models.CASCADE)
   created_at = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
