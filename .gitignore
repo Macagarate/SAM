@@ -65,3 +65,6 @@ app/sam/encuesta/migrations/0002_encuesta_activado.py
 .vscode/settings.json
 .vscode/settings.json
 .vscode/settings.json
+app/sam/analisis/migrations/0002_auto_20190827_1717.py
+app/sam/analisis/migrations/0003_auto_20190828_1641.py
+app/sam/sam/settings.py
