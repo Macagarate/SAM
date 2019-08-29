@@ -18,8 +18,6 @@ urlpatterns = [
    path('encuesta/', views.encuesta, name="encuesta"),
    path('encuestas/', views.encuestas, name="encuestas"),
    path('encuestas/crear_encuesta', views.crearEncuesta, name="crearEncuesta"),
-   path('encuestas/ver_encuesta/<int:encuesta_id>', views.verEncuesta, name="verEncuesta"),
-   path('encuestas/editar_encuesta', views.editarEncuesta, name="editarEncuesta"),
    path('encuestas/update_encuesta', views.updateEncuesta, name="updateEncuesta"),
    path('encuestas/eliminar_encuesta', views.eliminarEncuesta, name="eliminarEncuesta"),
    
@@ -35,6 +33,7 @@ urlpatterns = [
    #Matchmaking
    path('enviar_encuesta/', views.enviarEncuesta, name="enviar_encuesta"),
    path('import_users/', views.import_users, name="import_users"),
+   path('matchmaking/', views.emparejamiento, name="emparejamiento"),
 
    #Usuarios
    path('crear_alumno/', views.crear_alumno, name="crear_alumno"),

@@ -21,7 +21,11 @@ from django.urls import reverse
 from django.template import *
 
 
-##############---------FUNCIONES HANDLERS----------####################
+
+#-------------------------------------------------------------FUNCIONES GENERALES!
+
+
+##############---------FUNCIONES HANDLERS ERRORES 404 500----------####################
 
 def handler404(request):
     return render(request, '404.html', status=404)
@@ -33,8 +37,8 @@ def handler500(request):
 
 def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nuevos usuarios
     
-    # PARA EVITAR PROBLEMAS CON LETRAS ESPECIALES Y TILDES #
-    a,b = 'áéíóúüñÁÉÍÓÚÜÑ','aeiouunAEIOUUN'
+    
+    a,b = 'áéíóúüñÁÉÍÓÚÜÑ','aeiouunAEIOUUN' #Evitar problemas letras especiales y tildes
     trans = str.maketrans(a,b)
     nombre_nuevo = nombre.translate(trans)
     apellido_nuevo = apellido.translate(trans)
@@ -64,6 +68,10 @@ def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nue
 
     return False
 
+
+
+
+
 ##############---------FUNCION ENVIO ENCUESTA----------###################
 
 @login_required()
@@ -79,15 +87,18 @@ def enviarEncuesta(request):
             encuesta = Encuesta.objects.get(activado=True)
             alumno = Alumno.objects.get(usuario=request.user.id)
             preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
+            actividad = Actividad.objects.get(alumno=alumno, anno_participacion=now)
 
             for p in preguntas:
                 respuesta = Respuesta()
                 respuesta.encuesta = encuesta
                 respuesta.pregunta = p.pregunta
                 respuesta.alternativa = Alternativa.objects.get(id=request.POST.get(str(p.pregunta.id)))
-                respuesta.actividad = Actividad.objects.get(alumno=alumno, anno_participacion=now)
+                respuesta.actividad = actividad
                 respuesta.save()
-                
+            
+            actividad.status = True
+            actividad.save()
             messages.success(request, '¡Encuesta contestada exitosamente!')
             return HttpResponseRedirect(reverse("resultadoEncuesta"))
         
@@ -99,16 +110,19 @@ def enviarEncuesta(request):
     return render(request, 'home.html')
 
 
+
+
+
 ##############---------FUNCIONES DE RENDER----------####################
 
 
 @login_required()
-def index(request):
+def index(request): #Home
     return render(request, 'home.html')
 
 
 @login_required()
-def encuesta(request):
+def encuesta(request): #Para realizar encuesta
     now = date.today().year
     encuesta = Encuesta.objects.get(activado=True)
     alumno = Alumno.objects.get(usuario=request.user.id)
@@ -126,28 +140,59 @@ def encuesta(request):
     del encuesta
     del alumno
     del actividad
-    messages.success(request, 'Usted ya respondió la encuesta')
-    return render(request, 'home.html')
+    messages.warning(request, 'Usted ya respondió la encuesta')
+    return render(request, 'encuesta.html')
     
     
             
 
-
 @login_required()
-def perfil(request):
+def perfil(request): #Vista perfil usuario
     perfil = Alumno.objects.get(usuario=request.user.id)
     return render(request, 'perfil.html', {'perfil': perfil})
 
 
-@login_required()
-def resultadoEncuesta(request):
-    return render(request, 'resultado-encuesta.html')
-
 
 @login_required()
-def grupo(request):
+def resultadoEncuesta(request): #Vista resultado alumno
+    template = "resultado-encuesta.html"
+    if request.method == 'GET':
+        try:
+            now = date.today().year
+            perfil = Alumno.objects.get(usuario=request.user.id)
+            actividad = Actividad.objects.get(alumno=perfil, anno_participacion=now)
+            respuestas = Respuesta.objects.filter(actividad=actividad)
+            return render(request, template, {'respuestas': respuestas})
 
-    return render(request, 'grupo.html')
+        except Exception as e:
+            messages.error(request,"No fue posible visualizar los resultados. "+repr(e))
+            return render(request, 'home.html')
+
+
+
+@login_required()
+def grupo(request): #Vista grupo alumno
+    template = "grupo.html"
+    if request.method == 'GET':
+        try:
+            perfil = Alumno.objects.get(usuario=request.user.id)
+            grupos = Grupo.objects.all()
+            if perfil.es_Mechon == True:
+                grupo_a = Grupo.objects.filter(ahijado=perfil)
+                if not grupo_a:
+                    grupo = grupo_a
+                else:
+                    padrino = grupo_a[0].padrino
+                    grupo_p = Grupo.objects.filter(padrino=padrino)
+                    grupo = grupo_a | grupo_p
+            else:
+                grupo = Grupo.objects.filter(padrino=perfil)
+            return render(request, template, {'perfil':perfil, 'grupos': grupos, 'grupo': grupo})
+        
+        except Exception as e:
+            messages.error(request,"No fue posible visualizar los grupos. " + repr(e))
+            return render(request, 'home.html')
+
 
 
 
@@ -191,48 +236,61 @@ def cambiar_pass(request):
     #return render(request, 'cambiar_pass.html')
 
 
-#----------------PAGINAS CON SÓLO ACCESO DE ADMIN!
 
+
+
+
+
+
+#----------------------------------------------------------FUNCIONES SÓLO ADMIN!
+
+
+##############---------FUNCIONES LISTADO----------###################
 
 @staff_member_required()
-def listadoMechones(request):
+def listadoMechones(request): #Vista de todos los ahijados
     mechones = Alumno.objects.filter(es_Mechon=True)
     return render(request, 'listadoMechones.html', {'mechones': mechones})
 
 
 
 @staff_member_required()
-def listadoPadrinos(request):
+def listadoPadrinos(request): #Vista de todos los padrinos
     padrinos = Alumno.objects.filter(es_Mechon=False)
     return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
 
 
 
 @staff_member_required()
-def grupos(request):
+def grupos(request): #Vista de todos los grupos creados
     now = date.today().year
     grupos = Grupo.objects.all()
     actividades = Actividad.objects.filter(anno_participacion=now, rol=1)
-    print(grupos)
     return render(request, 'grupos.html', {'grupos': grupos, 'actividades': actividades})
 
-##############---------CRUD ENCUESTA----------###################
+
+
+
+
+##############---------FUNCIONES ENCUESTA----------###################
+
 
 @staff_member_required()
-def resultadosEncuestas(request):
-    alumnos = Alumno.objects.all()
-    return render(request, 'resultados-encuestas.html', {'alumnos': alumnos})
+def resultadosEncuestas(request): #Vista de todos los resultados de los alumnos
+    actividades = Actividad.objects.all()
+    respuestas = Respuesta.objects.all()
+    return render(request, 'resultados-encuestas.html', {'actividades': actividades, 'respuestas': respuestas})
 
 
 @staff_member_required()
-def encuestas(request):
+def encuestas(request): #Vista de todas las encuestas
     encuestas = Encuesta.objects.all()
     preguntas = EncuestaPregunta.objects.all()
     alternativas = PreguntaAlternativa.objects.all()
     return render(request, 'encuestas.html', {'encuestas': encuestas, 'preguntas': preguntas, 'alternativas': alternativas})
 
 @staff_member_required()
-def crearEncuesta(request):
+def crearEncuesta(request): #Crear encuesta nueva (NO TERMINADA)
     template = "crear_encuesta.html"
 
     if request.method == 'GET':
@@ -262,28 +320,26 @@ def crearEncuesta(request):
             
         return HttpResponseRedirect(reverse("crearEncuesta"))
 
-@staff_member_required()
-def verEncuesta(request, encuesta_id):
-    encuesta = Encuesta.objects.filter(id=encuesta_id)
-    return render(request,'encuesta_ver.html',{'encuesta': encuesta})
 
 @staff_member_required()
-def editarEncuesta(request):  
-    return redirect()
-
-@staff_member_required()
-def updateEncuesta(request):
-    return redirect()
-
-@staff_member_required()
-def eliminarEncuesta(request):
+def updateEncuesta(request): #Actualizar una encuesta (NO HECHA)
     return redirect()
 
 
-##############---------CRUD USUARIOS----------###################
 
 @staff_member_required()
-def crear_alumno(request):
+def eliminarEncuesta(request): #Eliminar una encuesta (NO HECHA)
+    return redirect()
+
+
+
+
+
+
+##############---------FUNCIONES USUARIOS----------###################
+
+@staff_member_required()
+def crear_alumno(request): #Crear alumno, usuario y actividad nuevo
     template = "crear_usuario.html"
 
     if request.method == 'GET':
@@ -291,62 +347,70 @@ def crear_alumno(request):
     
     if request.method == 'POST':
         try:
+            
             alumno = Alumno()
             nombre_alumno = request.POST.get('inputNombre')
             apellidos_alumno = request.POST.get('inputApellido')
             email_alumno = request.POST.get('inputEmail1')
             txt_rut =  request.POST.get('inputRut')
             rut = txt_rut.replace(".", "")
+            alumnoExiste = Alumno.objects.filter(rut=rut)
             
-            apellidos = apellidos_alumno.split(" ")
+            if not alumnoExiste:
 
-            if len(apellidos) == 1:
-                messages.error(request,'Ingrese al menos dos apellidos')
-                del alumno
-                return HttpResponseRedirect(reverse("crear_alumno"))
-            
-            emailSplit = email_alumno.split("@")
+                apellidos = apellidos_alumno.split(" ")
 
-            if emailSplit[1] != "mail.pucv.cl":
-                messages.error(request,'Ingrese mail institucional válido')
-                del alumno
-                return HttpResponseRedirect(reverse("crear_alumno"))
-
-            alumno.nombre = nombre_alumno.upper()
-            alumno.apellidos = apellidos_alumno.upper()
-            alumno.rut = rut
-            alumno.generacion = request.POST.get('inputGeneracion')
-            alumno.email = email_alumno
-            alumno.emailPersonal = request.POST.get('inputEmail2')
-            alumno.carrera = request.POST.get('inputCarrera')
-            
-            if request.POST.get('inputTipo') == 'PADRINO':
-                alumno.es_Mechon =  False
-            
-            else:
-                alumno.es_Mechon =  True
+                if len(apellidos) == 1:
+                    messages.error(request,'Ingrese al menos dos apellidos')
+                    del alumno
+                    return HttpResponseRedirect(reverse("crear_alumno"))
                 
-            if crearUser('post', nombre_alumno, apellidos_alumno, email_alumno):
-                usuario_alumno = User.objects.filter(email=email_alumno)
-                alumno.usuario = usuario_alumno[0]
-                alumno.save()
-                now = date.today().year
-                actividad = Actividad()
-                actividad.alumno = Alumno.objects.get(rut=rut)
-                actividad.status = True
-                actividad.anno_participacion = now
-                if request.POST.get('inputGeneracion') == now:
-                    actividad.rol = 0        
+                emailSplit = email_alumno.split("@")
+
+                if emailSplit[1] != "mail.pucv.cl":
+                    messages.error(request,'Ingrese mail institucional válido')
+                    del alumno
+                    return HttpResponseRedirect(reverse("crear_alumno"))
+
+                alumno.nombre = nombre_alumno.upper()
+                alumno.apellidos = apellidos_alumno.upper()
+                alumno.rut = rut
+                alumno.generacion = request.POST.get('inputGeneracion')
+                alumno.email = email_alumno
+                alumno.emailPersonal = request.POST.get('inputEmail2')
+                alumno.carrera = request.POST.get('inputCarrera')
+                
+                if request.POST.get('inputTipo') == 'PADRINO':
+                    alumno.es_Mechon =  False
+                
                 else:
-                    actividad.rol = 1
-                actividad.save()
-                messages.success(request, '¡Alumno agregado con éxito!')
-                del alumno
+                    alumno.es_Mechon =  True
+                    
+                if crearUser('post', nombre_alumno, apellidos_alumno, email_alumno):
+                    usuario_alumno = User.objects.filter(email=email_alumno)
+                    alumno.usuario = usuario_alumno[0]
+                    alumno.save()
+                    now = date.today().year
+                    actividad = Actividad()
+                    actividad.alumno = Alumno.objects.get(rut=rut)
+                    actividad.status = False
+                    actividad.anno_participacion = now
+                    if request.POST.get('inputGeneracion') == now:
+                        actividad.rol = 0        
+                    else:
+                        actividad.rol = 1
+                    actividad.save()
+                    messages.success(request, '¡Alumno agregado con éxito!')
+                    del alumno
+                else:
+                    messages.error(request,'ERROR - Alumno no pudo ser creado')
+                    del alumno
+                    return HttpResponseRedirect(reverse("crear_alumno"))
             else:
-                messages.error(request,'ERROR - Alumno no pudo ser creado')
+                messages.error(request,'¡Este usuario ya existe!')
                 del alumno
                 return HttpResponseRedirect(reverse("crear_alumno"))
-
+        
         except Exception as e:
             messages.error(request,"No fue posible crear alumno. "+repr(e))
             del alumno
@@ -356,7 +420,7 @@ def crear_alumno(request):
 
 
 @staff_member_required()
-def borrar_alumno(request, id_alumno=None):
+def borrar_alumno(request, id_alumno=None): #Elimina alumno completamente, junto con user y actividad
     
     tipoAlumno = None
 
@@ -381,11 +445,27 @@ def borrar_alumno(request, id_alumno=None):
             return HttpResponseRedirect(reverse("handler500"))
 
 
+@staff_member_required()
+def updateAlumno(request): #Actualizar datos alumnos (NO HECHA)
+    return redirect()
+
+
+
+
+##############---------EMPAREJAMIENTO----------###################
+
+
+@staff_member_required()
+def emparejamiento(request): #Emparejar alumnos que tienen la encuesta contestada
+
+    return render(request, 'matchmaking.html')
+
+
 
 ##############---------IMPORTACION----------###################
        
 @permission_required('admin.can_add_log_entry')
-def import_users(request):
+def import_users(request): #Importar alumnos nuevos desde archivo .csv
     template = "contact_upload.html"
 
     prompt = {
@@ -409,6 +489,7 @@ def import_users(request):
             for line in lines:						
                 fields = line.split(",")
                 alumnoExiste = Alumno.objects.filter(rut=fields[0])
+                
                 if not alumnoExiste:
                     alumno = Alumno()
                     alumno.rut = fields[0]
@@ -425,16 +506,22 @@ def import_users(request):
                     alumno.usuario = usuario_alumno[0]
                     alumno.save()
                     del alumno
+                
                 now = date.today().year
-                actividad = Actividad()
-                actividad.alumno = Alumno.objects.get(rut=fields[0])
-                actividad.status = True
-                actividad.anno_participacion = now
-                if fields[7] == now:
-                    actividad.rol = 0        
-                else:
-                    actividad.rol = 1
-                actividad.save()
+                alumno_actual = Alumno.objects.get(rut=fields[0])
+                actividad = Actividad.objects.filter(anno_participacion=now, alumno=alumno_actual)
+                
+                if not actividad:
+               
+                    actividad = Actividad()
+                    actividad.alumno = Alumno.objects.get(rut=fields[0])
+                    actividad.status = False
+                    actividad.anno_participacion = now
+                    if int(fields[7]) == now:
+                        actividad.rol = 0
+                    else:
+                        actividad.rol = 1
+                    actividad.save()
 
             messages.success(request, '¡Importación exitosa!')   
         

@@ -19,12 +19,11 @@
 
     {% if messages %}
         {% for message in messages %}
+            <div
             {% if  message.tags == "error" %}
-                <div class="alert alert-danger" role="alert">
+                class="alert alert-danger" role="alert">
             {% elif message.tags == "info" %}
-                <div class="alert alert-warning" role="alert">
-            {% else %}
-                <div class="alert alert-success" role="alert">
+                class="alert alert-warning" role="alert">
             {% endif %}
             {{message}}
             </div>
@@ -34,6 +33,18 @@
     <div class="col-sm-12 col-sm-offset-1">
         <div class="card">
             <div class="card-content">
+
+             {% if messages %}
+                {% for message in messages %}
+                    {% if  message.tags == "warning" %}
+                    <br>
+                        <center><div class="alert alert-warning col-sm-6" role="alert">
+                            <h4 class="alert-heading">{{message}}</h4>
+                            <p>Usted ya respondió la encuesta correspondiente al Programa de Acompañamiento Mechón de este año.</p>
+                            <hr>
+                            <p class="mb-0">Para visualizar sus respuestas, debes ir al menú principal y seleccionar Respuestas en la sección Encuesta.</p>
+                        </div></center>
+                    {% else %}
 
                 <form action="{% url 'enviar_encuesta' %}" method="POST">
                 {% csrf_token %}
@@ -69,6 +80,10 @@
                     <br>
 
                 </form>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            
             </div>
         </div>
     </div>
