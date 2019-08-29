@@ -8,48 +8,10 @@ import textdistance
 
 # Create your views here.
 def index(request):
-    alumno_padrinos = get_padrinos2()
-    alumno_ahijados = get_ahijados2()
-    matriz_mechones = list()
-    matriz_padrinos = list()
-    dicc_padrino = dict()
-    dicc_mechon = dict()
+
+
+    calcular_preferencias()
     
-    for i in alumno_padrinos:
-        resultado_encuesta_p = get_respuesta_encuesta(i.id)
-
-        for j in alumno_ahijados:
-            resultado_encuesta_m = get_respuesta_encuesta(j.id)
-            afinidad = textdistance.hamming.normalized_similarity (resultado_encuesta_p, resultado_encuesta_m)
-            dicc_padrino[i] = afinidad
-            dicc_mechon[j]  = afinidad
-
-            matriz_mechones = sorted(dicc_mechon.items(), key=operator.itemgetter(1), reverse = True)
-            matriz_padrinos = sorted(dicc_padrino.items(), key=operator.itemgetter(1),reverse = True)
-       
-        cont = 1 
-        for z  in matriz_mechones:
-            preferencia = Preferencia()
-            preferencia.pref_from = i
-            preferencia.pref_to = z[0]
-            preferencia.pref_order = cont
-            preferencia.save()
-            cont = cont + 1
-        cont = 1
-        for z  in matriz_padrinos:
-            preferencia = Preferencia()
-            preferencia.pref_from = z[0]
-            preferencia.pref_to = i
-            preferencia.pref_order = cont
-            preferencia.save()
-            cont = cont + 1
-    solver_padrinos = get_padrinos()
-    solver_ahijados = get_ahijados()
-    print(solver_padrinos)
-    print(solver_ahijados)
-
-    capacidad = round(len(matriz_mechones)/len(matriz_padrinos))
-    print(capacidad)
 
     #for k,m  in matriz_mechones:
     
@@ -59,8 +21,8 @@ def index(request):
 
     """ a = get_ahijados()
     b = get_padrinos()
-    solution =stableMarriage(b,a)
-    return render(request, 'matchmaking.html',{'ahijados' : a,'padrinos' : b, 'solucion': solution.items()}) """
+    solution =stableMarriage(b,a)"""
+    return render(request, 'matchmaking.html')
 
 def get_padrinos():
     padrinos = []
@@ -135,5 +97,47 @@ def get_respuesta_encuesta(id_usuario):
             aux = aux +str(r.alternativa.id)+'-'
     return aux
 
+def calcular_preferencias():
+    alumno_padrinos = get_padrinos2()
+    alumno_ahijados = get_ahijados2()
+    matriz_mechones = list()
+    matriz_padrinos = list()
+    dicc_padrino = dict()
+    dicc_mechon = dict()
     
+    for i in alumno_padrinos:
+        resultado_encuesta_p = get_respuesta_encuesta(i.id)
+        print("Padrino", i.alumno)
+        for j in alumno_ahijados:
+            print("Ahijado", j.alumno)
+            resultado_encuesta_m = get_respuesta_encuesta(j.id)
+            afinidad = textdistance.hamming.normalized_similarity (resultado_encuesta_p, resultado_encuesta_m)
+            dicc_padrino[i] = afinidad
+            dicc_mechon[j]  = afinidad
 
+            matriz_mechones = sorted(dicc_mechon.items(), key=operator.itemgetter(1), reverse = True)
+            matriz_padrinos = sorted(dicc_padrino.items(), key=operator.itemgetter(1),reverse = True)
+       
+        cont = 1 
+        for z  in matriz_mechones:
+            preferencia = Preferencia()
+            preferencia.pref_from = i
+            preferencia.pref_to = z[0]
+            preferencia.pref_order = cont
+            #preferencia.save()
+            cont = cont + 1
+        cont = 1
+        for z  in matriz_padrinos:
+            preferencia = Preferencia()
+            preferencia.pref_from = z[0]
+            preferencia.pref_to = i
+            preferencia.pref_order = cont
+            #preferencia.save()
+            cont = cont + 1
+    solver_padrinos = get_padrinos()
+    solver_ahijados = get_ahijados()
+    print(solver_padrinos)
+    print(solver_ahijados)
+
+    capacidad = round(len(matriz_mechones)/len(matriz_padrinos))
+    print(capacidad)
