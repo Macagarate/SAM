@@ -21,7 +21,11 @@ from django.urls import reverse
 from django.template import *
 
 
-##############---------FUNCIONES HANDLERS----------####################
+
+#-------------------------------------------------------------FUNCIONES GENERALES!
+
+
+##############---------FUNCIONES HANDLERS ERRORES 404 500----------####################
 
 def handler404(request):
     return render(request, '404.html', status=404)
@@ -33,8 +37,8 @@ def handler500(request):
 
 def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nuevos usuarios
     
-    # PARA EVITAR PROBLEMAS CON LETRAS ESPECIALES Y TILDES #
-    a,b = 'áéíóúüñÁÉÍÓÚÜÑ','aeiouunAEIOUUN'
+    
+    a,b = 'áéíóúüñÁÉÍÓÚÜÑ','aeiouunAEIOUUN' #Evitar problemas letras especiales y tildes
     trans = str.maketrans(a,b)
     nombre_nuevo = nombre.translate(trans)
     apellido_nuevo = apellido.translate(trans)
@@ -63,6 +67,10 @@ def crearUser(request, nombre=None, apellido=None, email=None): #Creacion de nue
         return True
 
     return False
+
+
+
+
 
 ##############---------FUNCION ENVIO ENCUESTA----------###################
 
@@ -102,16 +110,19 @@ def enviarEncuesta(request):
     return render(request, 'home.html')
 
 
+
+
+
 ##############---------FUNCIONES DE RENDER----------####################
 
 
 @login_required()
-def index(request):
+def index(request): #Home
     return render(request, 'home.html')
 
 
 @login_required()
-def encuesta(request):
+def encuesta(request): #Para realizar encuesta
     now = date.today().year
     encuesta = Encuesta.objects.get(activado=True)
     alumno = Alumno.objects.get(usuario=request.user.id)
@@ -136,18 +147,18 @@ def encuesta(request):
             
 
 @login_required()
-def perfil(request):
+def perfil(request): #Vista perfil usuario
     perfil = Alumno.objects.get(usuario=request.user.id)
     return render(request, 'perfil.html', {'perfil': perfil})
 
 
 @login_required()
-def resultadoEncuesta(request):
+def resultadoEncuesta(request): #Vista resultado alumno
     return render(request, 'resultado-encuesta.html')
 
 
 @login_required()
-def grupo(request):
+def grupo(request): #Vista grupo alumno
     perfil = Alumno.objects.get(usuario=request.user.id)
     grupos = Grupo.objects.all()
     if perfil.es_Mechon == True:
@@ -160,6 +171,9 @@ def grupo(request):
     else:
         grupo = Grupo.objects.filter(padrino=perfil)
     return render(request, 'grupo.html', {'perfil':perfil, 'grupos': grupos, 'grupo': grupo})
+
+
+
 
 
 
@@ -203,49 +217,62 @@ def cambiar_pass(request):
     #return render(request, 'cambiar_pass.html')
 
 
-#----------------PAGINAS CON SÓLO ACCESO DE ADMIN!
 
+
+
+
+
+
+#----------------------------------------------------------FUNCIONES SÓLO ADMIN!
+
+
+##############---------FUNCIONES LISTADO----------###################
 
 @staff_member_required()
-def listadoMechones(request):
+def listadoMechones(request): #Vista de todos los ahijados
     mechones = Alumno.objects.filter(es_Mechon=True)
     return render(request, 'listadoMechones.html', {'mechones': mechones})
 
 
 
 @staff_member_required()
-def listadoPadrinos(request):
+def listadoPadrinos(request): #Vista de todos los padrinos
     padrinos = Alumno.objects.filter(es_Mechon=False)
     return render(request, 'listadoPadrinos.html', {'padrinos': padrinos})
 
 
 
 @staff_member_required()
-def grupos(request):
+def grupos(request): #Vista de todos los grupos creados
     now = date.today().year
     grupos = Grupo.objects.all()
     actividades = Actividad.objects.filter(anno_participacion=now, rol=1)
     print(grupos)
     return render(request, 'grupos.html', {'grupos': grupos, 'actividades': actividades})
 
-##############---------CRUD ENCUESTA----------###################
+
+
+
+
+##############---------FUNCIONES ENCUESTA----------###################
+
 
 @staff_member_required()
-def resultadosEncuestas(request):
+def resultadosEncuestas(request): #Vista de todos los resultados de los alumnos
     actividades = Actividad.objects.all()
     respuestas = Respuesta.objects.all()
     return render(request, 'resultados-encuestas.html', {'actividades': actividades, 'respuestas': respuestas})
 
 
 @staff_member_required()
-def encuestas(request):
+def encuestas(request): #Vista de todas las encuestas
     encuestas = Encuesta.objects.all()
     preguntas = EncuestaPregunta.objects.all()
     alternativas = PreguntaAlternativa.objects.all()
     return render(request, 'encuestas.html', {'encuestas': encuestas, 'preguntas': preguntas, 'alternativas': alternativas})
 
 @staff_member_required()
-def crearEncuesta(request):
+def crearEncuesta(request): #Crear encuesta nueva (NO TERMINADA)
     template = "crear_encuesta.html"
 
     if request.method == 'GET':
@@ -275,28 +302,24 @@ def crearEncuesta(request):
             
         return HttpResponseRedirect(reverse("crearEncuesta"))
 
-@staff_member_required()
-def verEncuesta(request, encuesta_id):
-    encuesta = Encuesta.objects.filter(id=encuesta_id)
-    return render(request,'encuesta_ver.html',{'encuesta': encuesta})
 
 @staff_member_required()
-def editarEncuesta(request):  
+def updateEncuesta(request): #Actualizar una encuesta (NO HECHA)
     return redirect()
 
 @staff_member_required()
-def updateEncuesta(request):
-    return redirect()
-
-@staff_member_required()
-def eliminarEncuesta(request):
+def eliminarEncuesta(request): #Eliminar una encuesta (NO HECHA)
     return redirect()
 
 
-##############---------CRUD USUARIOS----------###################
+
+
+
+
+##############---------FUNCIONES USUARIOS----------###################
 
 @staff_member_required()
-def crear_alumno(request):
+def crear_alumno(request): #Crear alumno, usuario y actividad nuevo
     template = "crear_usuario.html"
 
     if request.method == 'GET':
@@ -377,7 +400,7 @@ def crear_alumno(request):
 
 
 @staff_member_required()
-def borrar_alumno(request, id_alumno=None):
+def borrar_alumno(request, id_alumno=None): #Elimina alumno completamente, junto con user y actividad
     
     tipoAlumno = None
 
@@ -402,11 +425,19 @@ def borrar_alumno(request, id_alumno=None):
             return HttpResponseRedirect(reverse("handler500"))
 
 
+@staff_member_required()
+def updateAlumno(request): #Actualizar datos alumnos (NO HECHA)
+    return redirect()
+
+
+
+
+
 
 ##############---------IMPORTACION----------###################
        
 @permission_required('admin.can_add_log_entry')
-def import_users(request):
+def import_users(request): #Importar alumnos nuevos desde archivo .csv
     template = "contact_upload.html"
 
     prompt = {
