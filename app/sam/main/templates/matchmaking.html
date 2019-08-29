@@ -10,6 +10,18 @@
     </div>
 </div>
 
+{% if messages %}
+    {% for message in messages %}
+        {% if  message.tags == "error" %}
+            <div class="alert alert-danger" role="alert">
+        {% else %}
+            <div class="alert alert-success" role="alert">
+        {% endif %}
+        {{message}}
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="col-sm-12 col-sm-offset-1">
     <div class="card">
         <div class="card-content">

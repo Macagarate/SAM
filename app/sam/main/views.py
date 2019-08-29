@@ -266,7 +266,6 @@ def grupos(request): #Vista de todos los grupos creados
     now = date.today().year
     grupos = Grupo.objects.all()
     actividades = Actividad.objects.filter(anno_participacion=now, rol=1)
-    print(grupos)
     return render(request, 'grupos.html', {'grupos': grupos, 'actividades': actividades})
 
 
@@ -458,7 +457,7 @@ def updateAlumno(request): #Actualizar datos alumnos (NO HECHA)
 
 @staff_member_required()
 def emparejamiento(request): #Emparejar alumnos que tienen la encuesta contestada
-    
+
     return render(request, 'matchmaking.html')
 
 
