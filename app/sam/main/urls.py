@@ -18,8 +18,6 @@ urlpatterns = [
    path('encuesta/', views.encuesta, name="encuesta"),
    path('encuestas/', views.encuestas, name="encuestas"),
    path('encuestas/crear_encuesta', views.crearEncuesta, name="crearEncuesta"),
-   path('encuestas/ver_encuesta/<int:encuesta_id>', views.verEncuesta, name="verEncuesta"),
-   path('encuestas/editar_encuesta', views.editarEncuesta, name="editarEncuesta"),
    path('encuestas/update_encuesta', views.updateEncuesta, name="updateEncuesta"),
    path('encuestas/eliminar_encuesta', views.eliminarEncuesta, name="eliminarEncuesta"),
    

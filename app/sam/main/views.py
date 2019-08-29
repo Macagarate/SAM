@@ -152,9 +152,12 @@ def perfil(request): #Vista perfil usuario
     return render(request, 'perfil.html', {'perfil': perfil})
 
 
+
 @login_required()
 def resultadoEncuesta(request): #Vista resultado alumno
+    
     return render(request, 'resultado-encuesta.html')
+
 
 
 @login_required()
