@@ -43,11 +43,13 @@ def index(request):
             preferencia.pref_order = cont
             preferencia.save()
             cont = cont + 1
+    solver_padrinos = get_padrinos()
+    solver_ahijados = get_ahijados()
+    print(solver_padrinos)
+    print(solver_ahijados)
 
-
-    print("Matris Mechones\n")
-    print (matriz_mechones)
-    print (matriz_padrinos)
+    capacidad = round(len(matriz_mechones)/len(matriz_padrinos))
+    print(capacidad)
 
     #for k,m  in matriz_mechones:
     
@@ -65,8 +67,12 @@ def get_padrinos():
     persona_set  = Actividad.objects.filter(rol=1)
     for p in persona_set:
         aux = dict()
-        aux['user'] = p.alumno
-        aux['preferences'] = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
+        lista_preferencias = []
+        aux['user'] = p.id
+        preferencias = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
+        for i in preferencias:
+            lista_preferencias.append(i.id)
+        aux['preferences'] = lista_preferencias
         padrinos.append(aux)
     return padrinos
 def get_ahijados():
@@ -74,8 +80,12 @@ def get_ahijados():
     persona_set  = Actividad.objects.filter(rol=0)
     for p in persona_set:
         aux = dict()
-        aux['user'] = p.alumno
-        aux['preferences'] = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
+        lista_preferencias = []
+        aux['user'] = p.id
+        preferencias = Preferencia.objects.filter(pref_from=p).order_by('pref_order')
+        for i in preferencias:
+            lista_preferencias.append(i.id)
+        aux['preferences'] = lista_preferencias 
         ahijados.append(aux)
     return ahijados
 
