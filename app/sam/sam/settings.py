@@ -29,7 +29,7 @@ STATICFILES_FINDERS = (
 SECRET_KEY = '+e@h*0&l*32-tzp%v4i6h-eq7w@(==wihn^x$p!@_0$@buo%g7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
@@ -95,7 +95,6 @@ DATABASES = {
 
     #'default': {
     #    'ENGINE': 'django.db.backends.mysql',
-    #    # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     #    'NAME': 'l8zzdmssju9468vf',
     #    'HOST': 'tviw6wn55xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
     #    'USER': 'dhtcear20b26dof6',

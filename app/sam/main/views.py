@@ -456,8 +456,8 @@ def updateAlumno(request): #Actualizar datos alumnos (NO HECHA)
 
 @staff_member_required()
 def emparejamiento(request): #Emparejar alumnos que tienen la encuesta contestada
-
-    return render(request, 'matchmaking.html')
+    respuestas = Respuesta.objects.all()
+    return render(request, 'matchmaking.html', {'respuestas': respuestas})
 
 
 
