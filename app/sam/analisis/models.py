@@ -60,3 +60,6 @@ class Respuesta(models.Model):
   encuesta = models.ForeignKey(Encuesta,related_name='survey_respuesta', on_delete = models.PROTECT)
   pregunta = models.ForeignKey(Pregunta,related_name='question_respuesta', on_delete = models.PROTECT)
   alternativa = models.ForeignKey(Alternativa,related_name='alt_respuesta', on_delete = models.PROTECT)
+
+  def __str__(self):
+    return 'Actividad=({0}), Encuesta=({1}), Pregunta=({2}), Alternativa=({3})'.format(self.actividad, self.encuesta,self.pregunta,self.alternativa)
