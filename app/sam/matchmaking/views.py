@@ -48,10 +48,8 @@ def calcular_preferencias_padrino():
     
     for i in alumno_padrinos:
         resultado_encuesta_p = get_respuesta_encuesta(i.id)
-        print("Padrino", i.alumno,"\n")
         
         for j in alumno_ahijados:
-            print("Ahijado", j.alumno,"\n")
             resultado_encuesta_m = get_respuesta_encuesta(j.id)
             afinidad = textdistance.hamming.normalized_similarity (resultado_encuesta_p, resultado_encuesta_m)
             dicc_mechon[j]  = afinidad
@@ -67,14 +65,10 @@ def calcular_preferencias_ahijado():
     
     for i in alumno_ahijados:
         resultado_encuesta_p = get_respuesta_encuesta(i.id)
-        print("Ahijado", i.alumno,"\n")
-        
         for j in  alumno_padrinos:
-            print("Padrino", j.alumno,"\n")
             resultado_encuesta_m = get_respuesta_encuesta(j.id)
             afinidad = textdistance.hamming.normalized_similarity (resultado_encuesta_p, resultado_encuesta_m)
             dicc_mechon[j]  = afinidad
-
         matriz_mechones = sorted(dicc_mechon.items(), key=operator.itemgetter(1), reverse = True)
         guardar_preferencia(i,matriz_mechones)
 
