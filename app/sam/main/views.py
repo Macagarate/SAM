@@ -79,15 +79,18 @@ def enviarEncuesta(request):
             encuesta = Encuesta.objects.get(activado=True)
             alumno = Alumno.objects.get(usuario=request.user.id)
             preguntas = EncuestaPregunta.objects.filter(encuesta = encuesta.id)
+            actividad = Actividad.objects.get(alumno=alumno, anno_participacion=now)
 
             for p in preguntas:
                 respuesta = Respuesta()
                 respuesta.encuesta = encuesta
                 respuesta.pregunta = p.pregunta
                 respuesta.alternativa = Alternativa.objects.get(id=request.POST.get(str(p.pregunta.id)))
-                respuesta.actividad = Actividad.objects.get(alumno=alumno, anno_participacion=now)
+                respuesta.actividad = actividad
                 respuesta.save()
-                
+            
+            actividad.status = True
+            actividad.save()
             messages.success(request, '¡Encuesta contestada exitosamente!')
             return HttpResponseRedirect(reverse("resultadoEncuesta"))
         
@@ -126,12 +129,11 @@ def encuesta(request):
     del encuesta
     del alumno
     del actividad
-    messages.success(request, 'Usted ya respondió la encuesta')
-    return render(request, 'home.html')
+    messages.warning(request, 'Usted ya respondió la encuesta')
+    return render(request, 'encuesta.html')
     
     
             
-
 
 @login_required()
 def perfil(request):
@@ -146,8 +148,18 @@ def resultadoEncuesta(request):
 
 @login_required()
 def grupo(request):
-
-    return render(request, 'grupo.html')
+    perfil = Alumno.objects.get(usuario=request.user.id)
+    grupos = Grupo.objects.all()
+    if perfil.es_Mechon == True:
+        grupo_a = Grupo.objects.filter(ahijado=perfil)
+        padrino = grupo_a[0].padrino
+        grupo_p = Grupo.objects.filter(padrino=padrino)
+        grupo = grupo_a | grupo_p
+        print (grupo)
+        print (grupo[0])
+    else:
+        grupo = Grupo.objects.filter(padrino=perfil)
+    return render(request, 'grupo.html', {'perfil':perfil, 'grupos': grupos, 'grupo': grupo})
 
 
 
@@ -220,8 +232,9 @@ def grupos(request):
 
 @staff_member_required()
 def resultadosEncuestas(request):
-    alumnos = Alumno.objects.all()
-    return render(request, 'resultados-encuestas.html', {'alumnos': alumnos})
+    actividades = Actividad.objects.all()
+    respuestas = Respuesta.objects.all()
+    return render(request, 'resultados-encuestas.html', {'actividades': actividades, 'respuestas': respuestas})
 
 
 @staff_member_required()
@@ -291,62 +304,70 @@ def crear_alumno(request):
     
     if request.method == 'POST':
         try:
+            
             alumno = Alumno()
             nombre_alumno = request.POST.get('inputNombre')
             apellidos_alumno = request.POST.get('inputApellido')
             email_alumno = request.POST.get('inputEmail1')
             txt_rut =  request.POST.get('inputRut')
             rut = txt_rut.replace(".", "")
+            alumnoExiste = Alumno.objects.filter(rut=rut)
             
-            apellidos = apellidos_alumno.split(" ")
+            if not alumnoExiste:
 
-            if len(apellidos) == 1:
-                messages.error(request,'Ingrese al menos dos apellidos')
-                del alumno
-                return HttpResponseRedirect(reverse("crear_alumno"))
-            
-            emailSplit = email_alumno.split("@")
+                apellidos = apellidos_alumno.split(" ")
 
-            if emailSplit[1] != "mail.pucv.cl":
-                messages.error(request,'Ingrese mail institucional válido')
-                del alumno
-                return HttpResponseRedirect(reverse("crear_alumno"))
-
-            alumno.nombre = nombre_alumno.upper()
-            alumno.apellidos = apellidos_alumno.upper()
-            alumno.rut = rut
-            alumno.generacion = request.POST.get('inputGeneracion')
-            alumno.email = email_alumno
-            alumno.emailPersonal = request.POST.get('inputEmail2')
-            alumno.carrera = request.POST.get('inputCarrera')
-            
-            if request.POST.get('inputTipo') == 'PADRINO':
-                alumno.es_Mechon =  False
-            
-            else:
-                alumno.es_Mechon =  True
+                if len(apellidos) == 1:
+                    messages.error(request,'Ingrese al menos dos apellidos')
+                    del alumno
+                    return HttpResponseRedirect(reverse("crear_alumno"))
                 
-            if crearUser('post', nombre_alumno, apellidos_alumno, email_alumno):
-                usuario_alumno = User.objects.filter(email=email_alumno)
-                alumno.usuario = usuario_alumno[0]
-                alumno.save()
-                now = date.today().year
-                actividad = Actividad()
-                actividad.alumno = Alumno.objects.get(rut=rut)
-                actividad.status = True
-                actividad.anno_participacion = now
-                if request.POST.get('inputGeneracion') == now:
-                    actividad.rol = 0        
+                emailSplit = email_alumno.split("@")
+
+                if emailSplit[1] != "mail.pucv.cl":
+                    messages.error(request,'Ingrese mail institucional válido')
+                    del alumno
+                    return HttpResponseRedirect(reverse("crear_alumno"))
+
+                alumno.nombre = nombre_alumno.upper()
+                alumno.apellidos = apellidos_alumno.upper()
+                alumno.rut = rut
+                alumno.generacion = request.POST.get('inputGeneracion')
+                alumno.email = email_alumno
+                alumno.emailPersonal = request.POST.get('inputEmail2')
+                alumno.carrera = request.POST.get('inputCarrera')
+                
+                if request.POST.get('inputTipo') == 'PADRINO':
+                    alumno.es_Mechon =  False
+                
                 else:
-                    actividad.rol = 1
-                actividad.save()
-                messages.success(request, '¡Alumno agregado con éxito!')
-                del alumno
+                    alumno.es_Mechon =  True
+                    
+                if crearUser('post', nombre_alumno, apellidos_alumno, email_alumno):
+                    usuario_alumno = User.objects.filter(email=email_alumno)
+                    alumno.usuario = usuario_alumno[0]
+                    alumno.save()
+                    now = date.today().year
+                    actividad = Actividad()
+                    actividad.alumno = Alumno.objects.get(rut=rut)
+                    actividad.status = False
+                    actividad.anno_participacion = now
+                    if request.POST.get('inputGeneracion') == now:
+                        actividad.rol = 0        
+                    else:
+                        actividad.rol = 1
+                    actividad.save()
+                    messages.success(request, '¡Alumno agregado con éxito!')
+                    del alumno
+                else:
+                    messages.error(request,'ERROR - Alumno no pudo ser creado')
+                    del alumno
+                    return HttpResponseRedirect(reverse("crear_alumno"))
             else:
-                messages.error(request,'ERROR - Alumno no pudo ser creado')
+                messages.error(request,'¡Este usuario ya existe!')
                 del alumno
                 return HttpResponseRedirect(reverse("crear_alumno"))
-
+        
         except Exception as e:
             messages.error(request,"No fue posible crear alumno. "+repr(e))
             del alumno
@@ -409,6 +430,7 @@ def import_users(request):
             for line in lines:						
                 fields = line.split(",")
                 alumnoExiste = Alumno.objects.filter(rut=fields[0])
+                
                 if not alumnoExiste:
                     alumno = Alumno()
                     alumno.rut = fields[0]
@@ -425,16 +447,22 @@ def import_users(request):
                     alumno.usuario = usuario_alumno[0]
                     alumno.save()
                     del alumno
+                
                 now = date.today().year
-                actividad = Actividad()
-                actividad.alumno = Alumno.objects.get(rut=fields[0])
-                actividad.status = True
-                actividad.anno_participacion = now
-                if fields[7] == now:
-                    actividad.rol = 0        
-                else:
-                    actividad.rol = 1
-                actividad.save()
+                alumno_actual = Alumno.objects.get(rut=fields[0])
+                actividad = Actividad.objects.filter(anno_participacion=now, alumno=alumno_actual)
+                
+                if not actividad:
+               
+                    actividad = Actividad()
+                    actividad.alumno = Alumno.objects.get(rut=fields[0])
+                    actividad.status = False
+                    actividad.anno_participacion = now
+                    if int(fields[7]) == now:
+                        actividad.rol = 0
+                    else:
+                        actividad.rol = 1
+                    actividad.save()
 
             messages.success(request, '¡Importación exitosa!')   
         

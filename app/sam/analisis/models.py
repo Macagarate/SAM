@@ -8,10 +8,7 @@ from usuarios.models import Alumno
 from usuarios.models import Actividad
 
 
-
 # Create your models here.
-
-
 
 #CLASE GRUPO, FOREIGN KEY A PADRINO
 
