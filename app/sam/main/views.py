@@ -179,11 +179,12 @@ def grupo(request): #Vista grupo alumno
             grupos = Grupo.objects.all()
             if perfil.es_Mechon == True:
                 grupo_a = Grupo.objects.filter(ahijado=perfil)
-                padrino = grupo_a[0].padrino
-                grupo_p = Grupo.objects.filter(padrino=padrino)
-                grupo = grupo_a | grupo_p
-                print (grupo)
-                print (grupo[0])
+                if not grupo_a:
+                    grupo = grupo_a
+                else:
+                    padrino = grupo_a[0].padrino
+                    grupo_p = Grupo.objects.filter(padrino=padrino)
+                    grupo = grupo_a | grupo_p
             else:
                 grupo = Grupo.objects.filter(padrino=perfil)
             return render(request, template, {'perfil':perfil, 'grupos': grupos, 'grupo': grupo})
