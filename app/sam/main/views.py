@@ -155,27 +155,42 @@ def perfil(request): #Vista perfil usuario
 
 @login_required()
 def resultadoEncuesta(request): #Vista resultado alumno
-    
-    return render(request, 'resultado-encuesta.html')
+    template = "resultado-encuesta.html"
+    if request.method == 'GET':
+        try:
+            now = date.today().year
+            perfil = Alumno.objects.get(usuario=request.user.id)
+            actividad = Actividad.objects.get(alumno=perfil, anno_participacion=now)
+            respuestas = Respuesta.objects.filter(actividad=actividad)
+            return render(request, template, {'respuestas': respuestas})
+
+        except Exception as e:
+            messages.error(request,"No fue posible visualizar los resultados. "+repr(e))
+            return render(request, 'home.html')
 
 
 
 @login_required()
 def grupo(request): #Vista grupo alumno
-    perfil = Alumno.objects.get(usuario=request.user.id)
-    grupos = Grupo.objects.all()
-    if perfil.es_Mechon == True:
-        grupo_a = Grupo.objects.filter(ahijado=perfil)
-        padrino = grupo_a[0].padrino
-        grupo_p = Grupo.objects.filter(padrino=padrino)
-        grupo = grupo_a | grupo_p
-        print (grupo)
-        print (grupo[0])
-    else:
-        grupo = Grupo.objects.filter(padrino=perfil)
-    return render(request, 'grupo.html', {'perfil':perfil, 'grupos': grupos, 'grupo': grupo})
-
-
+    template = "grupo.html"
+    if request.method == 'GET':
+        try:
+            perfil = Alumno.objects.get(usuario=request.user.id)
+            grupos = Grupo.objects.all()
+            if perfil.es_Mechon == True:
+                grupo_a = Grupo.objects.filter(ahijado=perfil)
+                padrino = grupo_a[0].padrino
+                grupo_p = Grupo.objects.filter(padrino=padrino)
+                grupo = grupo_a | grupo_p
+                print (grupo)
+                print (grupo[0])
+            else:
+                grupo = Grupo.objects.filter(padrino=perfil)
+            return render(request, template, {'perfil':perfil, 'grupos': grupos, 'grupo': grupo})
+        
+        except Exception as e:
+            messages.error(request,"No fue posible visualizar los grupos. " + repr(e))
+            return render(request, 'home.html')
 
 
 
@@ -309,6 +324,8 @@ def crearEncuesta(request): #Crear encuesta nueva (NO TERMINADA)
 @staff_member_required()
 def updateEncuesta(request): #Actualizar una encuesta (NO HECHA)
     return redirect()
+
+
 
 @staff_member_required()
 def eliminarEncuesta(request): #Eliminar una encuesta (NO HECHA)
