@@ -1,5 +1,6 @@
 {% extends 'home.html' %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block content %}
 
@@ -40,7 +41,11 @@
                     </br>
                     <h6>¿Olvidaste qué respondiste? Acá puedes ver tus respuestas.</h6>
                     <br>
-                    <p>Acá tienes a los integrantes que compononen tu grupo:</p>
+                    {% with respuestas|first as respuesta %}
+                    {% language 'es' %}
+                    <p>La encuesta fue respondida el: {{respuesta.created_at|date:"d/F/Y"}}</p>
+                    {% endlanguage %}
+                    {% endwith %}
                     <br>
                     <ul class="list-group">
                     {% for r in respuestas %}
