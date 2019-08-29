@@ -11,7 +11,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from usuarios.models import Alumno, Actividad
-from analisis.models import Grupo
 from encuesta.models import Encuesta, Pregunta, Alternativa, EncuestaPregunta, PreguntaAlternativa
 from analisis.models import Respuesta, Afinacion, Grupo
 import datetime
