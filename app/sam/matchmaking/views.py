@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Preferencia
 from usuarios.models import Actividad
 from analisis.models import Respuesta
+from analisis.models import Grupo
 from matching.games.hospital_resident import HospitalResident
 import operator
 import textdistance
@@ -23,21 +24,24 @@ def index(request):
     #print(solver_padrinos)
 
     solution = stableMarriage(solver_padrinos,solver_ahijados)
-    print(solution)
+    guardar_grupo(solution)
 
-    
-
-    #for k,m  in matriz_mechones:
-    
-
-    #capacidad = round(len(matriz_mechones)/len(matriz_padrinos))
-    #print(capacidad)
-
-
-    """ a = get_ahijados()
-    b = get_padrinos()
-    solution =stableMarriage(b,a)"""
     return render(request, 'matchmaking.html')
+
+def guardar_grupo(solucion_matchmaking):
+    cont=1
+    for x in solucion_matchmaking.items():
+        padrino = Actividad.objects.filter(id=str(x[0]))
+        for a in x[1]:
+            grupo = Grupo()
+            ahijado = Actividad.objects.filter(id=str(a))
+            grupo.padrino = padrino[0].alumno
+            grupo.ahijado = ahijado[0].alumno
+            grupo.numero = cont
+            grupo.save()
+        cont = cont + 1
+
+
 
 
 def calcular_preferencias_padrino():
